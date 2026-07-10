@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a0b3d">
+<meta name="apple-mobile-web-app-title" content="Trip Hub">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<title>Orlando Family Trip Hub 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --text:#ffffff;
+    --text-soft:rgba(255,255,255,0.82);
+    --muted:rgba(255,255,255,0.62);
+    --glass:rgba(255,255,255,0.09);
+    --glass-strong:rgba(255,255,255,0.15);
+    --glass-border:rgba(255,255,255,0.28);
+    --glass-border-soft:rgba(255,255,255,0.14);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Fredoka',system-ui,sans-serif;
+    background: linear-gradient(160deg, #1a0b3d 0%, #120730 55%, #0a0420 100%);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* blurred color blobs = the glassmorphism backdrop */
+  .bg-blobs{position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;}
+  .blob{position:absolute; border-radius:50%; filter:blur(70px); opacity:0.5;}
+  .blob1{width:340px; height:340px; background:#7b2ff7; top:-90px; left:-70px;}
+  .blob2{width:300px; height:300px; background:#ff5d8f; top:200px; right:-110px; opacity:0.4;}
+  .blob3{width:360px; height:360px; background:#00c9a7; bottom:-110px; left:15%; opacity:0.38;}
+  .blob4{width:260px; height:260px; background:#ffd166; bottom:140px; right:5%; opacity:0.32;}
+  .blob5{width:220px; height:220px; background:#00b4d8; top:45%; left:40%; opacity:0.22;}
+
+  .confetti{position:fixed; top:-40px; font-size:20px; pointer-events:none; z-index:1; animation:fall linear infinite; opacity:0.85;}
+  @keyframes fall{
+    0%{transform:translateY(-40px) rotate(0deg); opacity:0.9;}
+    100%{transform:translateY(110vh) rotate(360deg); opacity:0.5;}
+  }
+  header.top{
+    position:sticky; top:0; z-index:20;
+    padding:16px 16px 12px;
+    background:rgba(20,10,50,0.35);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    display:flex; align-items:center; gap:10px;
+    border-bottom:1px solid var(--glass-border-soft);
+    box-shadow:0 4px 24px rgba(0,0,0,0.25);
+  }
+  header.top h1{
+    font-family:'Baloo 2', sans-serif; font-weight:800; font-size:1.2rem; color:#fff; margin:0; flex:1; letter-spacing:0.3px;
+  }
+  header.top .sub{
+    display:block; font-family:'Fredoka'; font-weight:400; font-size:0.66rem; color:#ffd166; margin-top:2px; letter-spacing:0.5px;
+  }
+  .icon-btn{
+    background:rgba(255,255,255,0.14); color:#fff; border:1px solid rgba(255,255,255,0.18); border-radius:14px;
+    width:38px;height:38px; font-size:1.15rem; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .icon-btn:active{transform:scale(0.92);}
+  main{position:relative; z-index:2; padding:16px 16px 40px; max-width:520px; margin:0 auto;}
+  .hero{text-align:center; padding:6px 8px 18px;}
+  .hero .emoji-row{font-size:2rem; margin-bottom:6px;}
+  .hero p{color:var(--text-soft); font-size:0.9rem; margin:4px 0 0; line-height:1.4;}
+
+  /* collapsible / details — glass panels */
+  details.collapsible{
+    border-radius:16px; margin-bottom:14px; overflow:hidden;
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+  }
+  details.collapsible summary{
+    cursor:pointer; list-style:none; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px;
+    font-size:0.8rem; font-weight:600;
+  }
+  details.collapsible summary::-webkit-details-marker{display:none;}
+  details.collapsible summary::after{content:'▾'; font-size:0.8rem; transition:transform 0.2s ease; flex-shrink:0;}
+  details.collapsible[open] summary::after{transform:rotate(180deg);}
+  details.collapsible .collapsible-body{padding:0 14px 14px; font-size:0.8rem; line-height:1.5;}
+  details.heads-up-details{background:rgba(255,209,102,0.14); border:1px solid rgba(255,209,102,0.35); color:#ffe9b3;}
+  details.heads-up-details b{color:#fff;}
+  details.closure-details{background:rgba(255,93,143,0.16); border:1px solid rgba(255,93,143,0.4); color:#ffd6e2;}
+  details.closure-details b{color:#fff;}
+  details.land-details{background:var(--glass); border:1px solid var(--glass-border-soft); color:var(--text);}
+  details.land-details summary{color:var(--text);}
+  details.land-details .collapsible-body{padding-top:2px;}
+  details.land-details .land-list{margin-top:4px;}
+  .section-label{
+    color:#ffd166; font-family:'Baloo 2'; font-weight:700; font-size:0.92rem;
+    margin:20px 0 10px 4px; display:flex; align-items:center; gap:8px;
+  }
+  .section-label:first-of-type{margin-top:4px;}
+  .park-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .park-card{
+    border-radius:20px; padding:16px 12px; min-height:112px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    cursor:pointer; text-align:left;
+    box-shadow:0 8px 24px rgba(0,0,0,0.3);
+    transition:transform 0.15s ease;
+    position:relative; overflow:hidden;
+    border:1px solid var(--glass-border);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+  }
+  .park-card:active{transform:scale(0.96);}
+  .park-card .icon{font-size:1.8rem;}
+  .park-card .name{font-family:'Baloo 2'; font-weight:700; font-size:0.92rem; color:#fff; line-height:1.15; margin-top:8px;}
+  .park-card .count{font-size:0.68rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:500;}
+  .park-card::after{content:''; position:absolute; right:-20px; bottom:-20px; width:80px; height:80px; background:rgba(255,255,255,0.10); border-radius:50%;}
+
+  .theme-epic{background:linear-gradient(145deg,rgba(58,28,158,0.55),rgba(123,47,247,0.42) 60%,rgba(0,212,255,0.32));}
+  .theme-ioa{background:linear-gradient(145deg,rgba(11,110,79,0.55),rgba(46,196,182,0.42) 60%,rgba(244,163,0,0.32));}
+  .theme-usf{background:linear-gradient(145deg,rgba(142,14,0,0.55),rgba(195,20,50,0.42) 60%,rgba(255,183,3,0.32));}
+  .theme-vb{background:linear-gradient(145deg,rgba(255,81,47,0.55),rgba(240,152,25,0.42) 60%,rgba(0,201,167,0.32));}
+  .theme-mk{background:linear-gradient(145deg,rgba(30,60,114,0.55),rgba(91,44,145,0.42) 55%,rgba(255,209,102,0.32));}
+  .theme-epcot{background:linear-gradient(145deg,rgba(0,78,146,0.55),rgba(0,198,255,0.42) 60%,rgba(125,211,252,0.32));}
+  .theme-hs{background:linear-gradient(145deg,rgba(106,1,54,0.55),rgba(201,24,74,0.42) 60%,rgba(255,183,3,0.32));}
+  .theme-ak{background:linear-gradient(145deg,rgba(19,78,19,0.55),rgba(45,143,45,0.42) 60%,rgba(201,162,39,0.32));}
+
+  .park-banner{border-radius:22px; padding:20px 18px; margin-bottom:16px; position:relative; overflow:hidden; box-shadow:0 10px 28px rgba(0,0,0,0.35); border:1px solid var(--glass-border); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);}
+  .park-banner .icon{font-size:2.2rem;}
+  .park-banner h2{font-family:'Baloo 2'; font-weight:800; color:#fff; font-size:1.3rem; margin:8px 0 2px;}
+  .park-banner .tagline{color:rgba(255,255,255,0.9); font-size:0.8rem; margin:0;}
+
+  /* cool-down button — sits on park cards + park banner */
+  .cool-btn{
+    position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:50%;
+    background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.38); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:1rem; cursor:pointer; z-index:3;
+    box-shadow:0 2px 10px rgba(0,0,0,0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .cool-btn:active{transform:scale(0.9);}
+
+  /* dropdown filter — glass */
+  .select-wrap{position:relative; margin-bottom:14px;}
+  .filter-select{
+    width:100%; padding:12px 36px 12px 14px; border-radius:14px; border:1px solid var(--glass-border-soft);
+    background:rgba(255,255,255,0.10); color:#fff; font-family:'Fredoka'; font-size:0.85rem; font-weight:600;
+    appearance:none; -webkit-appearance:none; -moz-appearance:none; cursor:pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .filter-select option{background:#241246; color:#fff;}
+  .select-arrow{position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#ffd166; pointer-events:none; font-size:0.9rem;}
+
+  .surprise-btn{
+    width:100%; padding:13px; border-radius:16px; border:1px solid rgba(255,255,255,0.25); margin-bottom:16px;
+    background:linear-gradient(90deg,rgba(255,93,143,0.85),rgba(255,166,43,0.85)); color:#fff; font-family:'Baloo 2'; font-weight:700;
+    font-size:0.92rem; cursor:pointer; box-shadow:0 6px 18px rgba(255,93,143,0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .surprise-btn:active{transform:scale(0.98);}
+
+  .progress-row{display:flex; align-items:center; gap:10px; margin-bottom:14px; font-size:0.76rem; color:var(--text-soft);}
+  .progress-bar{flex:1; height:8px; border-radius:99px; background:rgba(255,255,255,0.12); overflow:hidden; border:1px solid rgba(255,255,255,0.1);}
+  .progress-fill{height:100%; background:linear-gradient(90deg,#2ec4b6,#ffd166); border-radius:99px; transition:width 0.3s ease;}
+
+  .snack-list, .secret-list, .land-list, .times-list{display:flex; flex-direction:column; gap:14px;}
+  .snack-card, .secret-card{
+    background: var(--glass-strong); border-radius:18px; padding:15px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.3);
+    animation:pop 0.3s ease backwards; position:relative; transition:opacity 0.2s ease;
+    border:1px solid var(--glass-border-soft);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+  }
+  .snack-card.highlight{outline:3px solid #ffd166; outline-offset:2px;}
+  .snack-card.tried{opacity:0.5;}
+  @keyframes pop{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+  .snack-top{display:flex; align-items:flex-start; gap:12px;}
+  .snack-emoji{
+    font-size:1.6rem; width:44px; height:44px; border-radius:14px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.16);
+    border:1px solid rgba(255,255,255,0.15);
+  }
+  .snack-name{font-family:'Baloo 2'; font-weight:700; font-size:0.98rem; color:var(--text); margin:0; padding-right:34px;}
+  .snack-desc{font-size:0.84rem; color:var(--muted); margin:5px 0 0; line-height:1.4;}
+  .snack-meta{margin-top:10px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
+  .loc-pill{display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,0.14); color:#fff; font-size:0.72rem; font-weight:600; padding:5px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.18); backdrop-filter: blur(6px);}
+  .tag-pill{font-size:0.68rem; font-weight:700; padding:4px 9px; border-radius:999px; color:#fff;}
+  .tag-must{background:#ff5d8f;} .tag-kid{background:#2ec4b6;} .tag-new{background:#ffa62b;}
+  .tag-adult{background:#6a4c93;} .tag-classic{background:#5b7fff;} .tag-pesc{background:#06a77d;}
+  .tag-interactive{background:#00b4d8;}
+  .who-kid9{background:#ff9f1c;} .who-teen13{background:#e63946;} .who-adult22{background:#8338ec;}
+  .who-parents{background:#3a86ff;} .who-everyone{background:#2ec4b6;}
+
+  .check-btn{
+    position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:50%;
+    border:2px solid rgba(255,255,255,0.35); background:rgba(255,255,255,0.14); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-size:0.85rem; color:transparent;
+    backdrop-filter: blur(8px);
+  }
+  .check-btn.checked{background:#2ec4b6; border-color:#2ec4b6; color:#fff;}
+
+  .land-card{background:var(--glass); border-radius:16px; padding:14px 16px; box-shadow:0 6px 18px rgba(0,0,0,0.25); border:1px solid var(--glass-border-soft); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);}
+  .land-card .lname{font-family:'Baloo 2'; font-weight:700; font-size:0.92rem; color:var(--text); margin:0 0 3px;}
+  .land-card .lblurb{font-size:0.82rem; color:var(--muted); margin:0; line-height:1.42;}
+  .layout-intro{color:var(--text-soft); font-size:0.84rem; line-height:1.5; margin-bottom:16px;}
+
+  .time-card{background:var(--glass); border-radius:16px; padding:14px 16px; box-shadow:0 6px 18px rgba(0,0,0,0.25); border:1px solid var(--glass-border-soft); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); display:flex; gap:10px;}
+  .time-card .temoji{font-size:1.2rem; flex-shrink:0;}
+  .time-card p{margin:0; font-size:0.84rem; color:var(--text); line-height:1.45;}
+  #closureAlertWrap:not(:empty){margin-top:16px;}
+
+  .secret-card .snack-name{padding-right:0;}
+
+  footer{text-align:center; color:rgba(255,255,255,0.4); font-size:0.7rem; padding:16px 16px 10px; line-height:1.5; position:relative; z-index:2;}
+  .hidden{display:none !important;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* bottom tab bar — thumb-reach navigation on park screens */
+  .tabbar{
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:520px; z-index:30; display:flex; gap:6px;
+    background:rgba(20,10,50,0.6);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border-top:1px solid var(--glass-border-soft);
+    padding:6px 10px calc(8px + env(safe-area-inset-bottom));
+    box-shadow:0 -6px 24px rgba(0,0,0,0.35);
+  }
+  .tabbar button{
+    flex:1; background:none; border:none; border-radius:12px; cursor:pointer;
+    color:var(--muted); font-family:'Fredoka'; font-weight:600; font-size:0.68rem;
+    padding:7px 4px 6px; display:flex; flex-direction:column; align-items:center; gap:2px;
+  }
+  .tabbar button .ticon{font-size:1.3rem; line-height:1;}
+  .tabbar button.active{color:#ffd166; background:rgba(255,209,102,0.12);}
+  .tabbar button:active{transform:scale(0.95);}
+  #parkScreen{padding-bottom:84px;}
+
+  /* cool-down bottom-sheet modal */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(10,5,25,0.55); z-index:70;
+    opacity:0; pointer-events:none; transition:opacity 0.25s ease;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.open{opacity:1; pointer-events:auto;}
+  .cool-modal{
+    position:fixed; left:50%; bottom:0; transform:translate(-50%, 100%);
+    width:100%; max-width:520px; max-height:78vh; overflow-y:auto;
+    background:rgba(24,12,56,0.72);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border:1px solid var(--glass-border-soft); border-bottom:none;
+    border-radius:24px 24px 0 0; z-index:71;
+    padding:18px 18px calc(18px + env(safe-area-inset-bottom));
+    box-shadow:0 -10px 40px rgba(0,0,0,0.45);
+    transition:transform 0.3s ease;
+  }
+  .cool-modal.open{transform:translate(-50%, 0);}
+  .cool-modal-handle{width:38px; height:4px; border-radius:99px; background:rgba(255,255,255,0.3); margin:0 auto 14px;}
+  .cool-modal-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:12px;}
+  .cool-modal-eyebrow{color:#7dd3fc; font-family:'Baloo 2'; font-weight:700; font-size:0.68rem; letter-spacing:1px; margin-bottom:2px;}
+  .cool-modal-head h3{font-family:'Baloo 2'; font-weight:800; color:#fff; margin:0; font-size:1.1rem;}
+  .cool-modal-intro{font-size:0.82rem; color:var(--text-soft); line-height:1.5; margin:0 0 14px;}
+  .cool-spot-card{
+    background:var(--glass); border:1px solid var(--glass-border-soft); border-radius:16px; padding:13px 14px; margin-bottom:12px;
+    backdrop-filter: blur(12px);
+  }
+  .cool-spot-card:last-child{margin-bottom:0;}
+  .cool-spot-top{display:flex; gap:10px; align-items:flex-start;}
+  .cool-spot-emoji{font-size:1.3rem; flex-shrink:0;}
+  .cool-spot-name{font-family:'Baloo 2'; font-weight:700; color:#fff; margin:0; font-size:0.92rem;}
+  .cool-spot-desc{font-size:0.8rem; color:var(--muted); margin:4px 0 0; line-height:1.4;}
+  .cool-spot-meta{margin-top:8px; display:flex; flex-wrap:wrap; gap:6px;}
+  .cool-type-pill{font-size:0.65rem; font-weight:700; padding:3px 8px; border-radius:999px; color:#fff;}
+  .cool-type-show{background:#3a86ff;}
+  .cool-type-ride{background:#8338ec;}
+  .cool-type-dining{background:#06a77d;}
+  .cool-type-shade{background:#ffa62b;}
+  .cool-closed-note{background:rgba(255,93,143,0.14); border:1px solid rgba(255,93,143,0.3); border-radius:14px; padding:10px 12px; font-size:0.76rem; color:#ffd6e2; line-height:1.4; margin-top:4px;}
+
+  /* trip dashboard (countdown / day-of / recap) */
+  .dash-card{
+    background:var(--glass-strong); border:1px solid var(--glass-border); border-radius:20px;
+    padding:16px 16px 14px; margin-bottom:14px; text-align:center;
+    box-shadow:0 8px 24px rgba(0,0,0,0.3);
+    backdrop-filter:blur(18px) saturate(150%);
+    -webkit-backdrop-filter:blur(18px) saturate(150%);
+  }
+  .dash-big{font-family:'Baloo 2'; font-weight:800; font-size:1.45rem; color:#ffd166; margin:0; line-height:1.15;}
+  .dash-sub{font-size:0.78rem; color:var(--text-soft); margin:4px 0 0;}
+  .dash-today-btn{
+    display:inline-flex; align-items:center; gap:8px; margin-top:10px;
+    background:linear-gradient(90deg,rgba(46,196,182,0.85),rgba(0,180,216,0.85));
+    border:1px solid rgba(255,255,255,0.25); color:#fff; font-family:'Baloo 2'; font-weight:700;
+    font-size:0.88rem; padding:10px 16px; border-radius:14px; cursor:pointer;
+  }
+  .dash-today-btn:active{transform:scale(0.97);}
+  .dash-progress{display:flex; align-items:center; gap:10px; margin-top:12px; font-size:0.72rem; color:var(--muted);}
+
+  /* day planner rows */
+  .day-row{
+    background:var(--glass); border:1px solid var(--glass-border-soft); border-radius:14px;
+    padding:10px 12px; margin-bottom:8px;
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  }
+  .day-row.today{border-color:#ffd166; box-shadow:0 0 0 1px #ffd166;}
+  .day-main{display:flex; align-items:center; gap:10px;}
+  .day-date{font-family:'Baloo 2'; font-weight:700; font-size:0.8rem; width:58px; flex-shrink:0; line-height:1.2; color:#fff;}
+  .day-date .dow{display:block; color:#ffd166; font-size:0.6rem; letter-spacing:0.6px; font-family:'Fredoka'; font-weight:600;}
+  .day-select{
+    flex:1; min-width:0; padding:9px 28px 9px 10px; border-radius:10px; border:1px solid var(--glass-border-soft);
+    background:rgba(255,255,255,0.10); color:#fff; font-family:'Fredoka'; font-size:0.78rem; font-weight:600;
+    appearance:none; -webkit-appearance:none; -moz-appearance:none; cursor:pointer;
+  }
+  .day-select option{background:#241246; color:#fff;}
+  .day-select.empty{color:var(--muted);}
+  .day-go{
+    width:34px; height:34px; border-radius:10px; flex-shrink:0;
+    background:rgba(255,209,102,0.2); border:1px solid rgba(255,209,102,0.45); color:#ffd166;
+    font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .day-go:active{transform:scale(0.92);}
+  .day-hint{font-size:0.68rem; color:var(--muted); margin:7px 2px 0; line-height:1.35;}
+
+  /* live wait times */
+  #liveWaits{margin-bottom:16px;}
+  .waits-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
+  .waits-head span{font-family:'Baloo 2'; font-weight:700; font-size:0.92rem; color:#ffd166;}
+  .waits-refresh{width:32px; height:32px; border-radius:10px; background:rgba(255,255,255,0.12); border:1px solid var(--glass-border-soft); color:#ffd166; font-size:1rem; cursor:pointer;}
+  .waits-list{background:var(--glass); border:1px solid var(--glass-border-soft); border-radius:16px; overflow:hidden; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);}
+  .wait-row{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:9px 14px; border-bottom:1px solid var(--glass-border-soft); font-size:0.8rem;}
+  .wait-row:last-child{border-bottom:none;}
+  .wait-row.closed{opacity:0.45;}
+  .wait-row .wname{color:var(--text); min-width:0;}
+  .wait-row .wtime{font-family:'Baloo 2'; font-weight:700; flex-shrink:0;}
+  .w-lo{color:#2ec4b6;} .w-md{color:#ffd166;} .w-hi{color:#ff5d8f;}
+  .waits-note{font-size:0.78rem; color:var(--muted); background:var(--glass); border:1px solid var(--glass-border-soft); border-radius:14px; padding:10px 14px; line-height:1.4;}
+  .waits-src{font-size:0.62rem; color:var(--muted); margin:6px 2px 0;}
+  .waits-src a{color:inherit;}
+
+  /* ---- sunlight mode (high contrast for outdoor use) ---- */
+  body.light{
+    --text:#221545;
+    --text-soft:rgba(34,21,69,0.85);
+    --muted:rgba(34,21,69,0.62);
+    --glass:rgba(255,255,255,0.6);
+    --glass-strong:rgba(255,255,255,0.78);
+    --glass-border:rgba(34,21,69,0.16);
+    --glass-border-soft:rgba(34,21,69,0.12);
+    background:linear-gradient(160deg,#eef1ff 0%,#fdf3ff 55%,#fff6ea 100%);
+  }
+  body.light .blob{opacity:0.14;}
+  body.light .confetti{opacity:0.5;}
+  body.light header.top{background:rgba(255,255,255,0.72); box-shadow:0 4px 20px rgba(34,21,69,0.1);}
+  body.light header.top h1{color:#2a1a5e;}
+  body.light header.top .sub{color:#7b2ff7;}
+  body.light .icon-btn{background:rgba(34,21,69,0.06); color:#2a1a5e; border-color:rgba(34,21,69,0.15);}
+  body.light .section-label{color:#6d28d9;}
+  body.light .park-card, body.light .park-banner{background-color:rgba(32,19,74,0.85);}
+  body.light .filter-select, body.light .day-select{background:rgba(34,21,69,0.05); color:#2a1a5e;}
+  body.light .filter-select option, body.light .day-select option{background:#ffffff; color:#221545;}
+  body.light .select-arrow{color:#7b2ff7;}
+  body.light .loc-pill{background:rgba(34,21,69,0.07); color:#2a1a5e; border-color:rgba(34,21,69,0.12);}
+  body.light .snack-emoji{background:rgba(34,21,69,0.06); border-color:rgba(34,21,69,0.1);}
+  body.light .check-btn{border-color:rgba(34,21,69,0.3); background:rgba(34,21,69,0.05);}
+  body.light .check-btn.checked{background:#0f9488; border-color:#0f9488; color:#fff;}
+  body.light .progress-bar{background:rgba(34,21,69,0.1); border-color:rgba(34,21,69,0.08);}
+  body.light details.heads-up-details{background:rgba(255,166,43,0.16); border-color:rgba(180,83,9,0.35); color:#7c4a03;}
+  body.light details.heads-up-details b{color:#221545;}
+  body.light details.closure-details{background:rgba(255,93,143,0.12); border-color:rgba(190,24,93,0.3); color:#9d174d;}
+  body.light details.closure-details b{color:#221545;}
+  body.light .cool-modal{background:rgba(255,255,255,0.94);}
+  body.light .cool-modal-head h3{color:#221545;}
+  body.light .cool-modal-eyebrow{color:#0369a1;}
+  body.light .cool-modal-handle{background:rgba(34,21,69,0.25);}
+  body.light .cool-spot-name{color:#221545;}
+  body.light .cool-closed-note{background:rgba(190,24,93,0.08); border-color:rgba(190,24,93,0.25); color:#9d174d;}
+  body.light .dash-big{color:#b45309;}
+  body.light .day-date{color:#221545;}
+  body.light .day-date .dow{color:#7b2ff7;}
+  body.light .day-go{background:rgba(123,47,247,0.1); border-color:rgba(123,47,247,0.4); color:#6d28d9;}
+  body.light .day-row.today{border-color:#b45309; box-shadow:0 0 0 1px #b45309;}
+  body.light .tabbar{background:rgba(255,255,255,0.85); box-shadow:0 -6px 20px rgba(34,21,69,0.12);}
+  body.light .tabbar button.active{color:#6d28d9; background:rgba(123,47,247,0.1);}
+  body.light .waits-head span{color:#b45309;}
+  body.light .waits-refresh{background:rgba(34,21,69,0.06); color:#6d28d9;}
+  body.light .w-lo{color:#0f766e;} body.light .w-md{color:#b45309;} body.light .w-hi{color:#be185d;}
+  body.light footer{color:rgba(34,21,69,0.45);}
+
+  @media (prefers-reduced-motion: reduce){
+    .confetti{display:none;}
+    *{transition:none !important; animation:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+  <div class="blob blob4"></div>
+  <div class="blob blob5"></div>
+</div>
+
+<div id="confettiLayer"></div>
+
+<header class="top">
+  <button class="icon-btn hidden" id="backBtn" aria-label="Back">←</button>
+  <div>
+    <h1 id="headerTitle">🎉 Orlando Trip Hub</h1>
+    <span class="sub" id="headerSub">JULY 14–22, 2026 · TAP A PARK</span>
+  </div>
+  <button class="icon-btn" id="themeBtn" aria-label="Switch between dark and sunlight mode">☀️</button>
+</header>
+
+<main id="mainEl">
+
+  <!-- HOME SCREEN -->
+  <div id="homeScreen">
+    <div class="hero">
+      <div class="emoji-row">🎢🏰🍿✨🧭</div>
+      <p>Snacks, ride strategy, and family secrets — all in one place. Pick a park to get started. Tap ❄️ on any park for AC break spots.</p>
+    </div>
+
+    <div class="dash-card" id="dashCard"></div>
+
+    <details class="collapsible heads-up-details">
+      <summary>📋 Heads up for your dates (tap to expand)</summary>
+      <div class="collapsible-body">
+        Crowds at Epic Universe have trended calmer since spring 2026, but they swing hard day to day (the same week can see 1/10 and 9/10 crowd levels back to back) — don't count on it being empty, just check wait times that morning. Still rope-drop the headliners. Volcano Bay Nights hits your window twice: <b>Thursday, July 16 and Friday, July 17</b> (7–11pm, early entry 4pm, $99/person). 600 Block Speakeasy at CityWalk runs through Aug 23. Construction: Frontierland (MK), DinoLand (AK), Lost Continent (IOA), Grand Avenue (HS) — plus <b>Jurassic Park River Adventure (IOA) is closed for refurb until Nov 19</b>.
+      </div>
+    </details>
+
+    <div class="section-label">📅 Day Planner · Jul 14–22</div>
+    <details class="collapsible land-details" id="plannerDetails">
+      <summary>Plan which park on which day (tap to expand)</summary>
+      <div class="collapsible-body">
+        <p class="layout-intro" style="margin-bottom:10px;">Pick a park for each day — it saves automatically on this phone. Tap → to jump to that park's page. Rest days are fine: leave a day blank or mark it Rest Day.</p>
+        <div id="plannerList"></div>
+      </div>
+    </details>
+
+    <div class="section-label">🎢 Universal Orlando</div>
+    <div class="park-grid" id="universalGrid"></div>
+
+    <div class="section-label">🏰 Walt Disney World</div>
+    <div class="park-grid" id="disneyGrid"></div>
+  </div>
+
+  <!-- PARK DETAIL SCREEN -->
+  <div id="parkScreen" class="hidden">
+    <div class="park-banner" id="parkBanner">
+      <button class="cool-btn" id="bannerCoolBtn" aria-label="Cool down spots">❄️</button>
+      <div class="icon" id="parkBannerIcon"></div>
+      <h2 id="parkBannerName"></h2>
+      <p class="tagline" id="parkBannerTag"></p>
+    </div>
+
+    <!-- SNACKS TAB -->
+    <div class="tab-panel active" id="panel-snacks">
+      <button class="surprise-btn" id="surpriseBtn">🎲 Surprise Me — Pick a Snack</button>
+      <div class="progress-row">
+        <span id="progressLabel">0 of 0 tried</span>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+      <div class="select-wrap">
+        <select class="filter-select" id="snackFilterSelect"></select>
+        <span class="select-arrow">▾</span>
+      </div>
+      <div class="snack-list" id="snackList"></div>
+    </div>
+
+    <!-- STRATEGY TAB (best times + collapsible closures + collapsible land layout) -->
+    <div class="tab-panel" id="panel-strategy">
+      <div id="liveWaits"></div>
+      <p class="layout-intro" id="timesIntro"></p>
+      <div class="times-list" id="timesList"></div>
+      <div id="closureAlertWrap"></div>
+      <details class="collapsible land-details">
+        <summary>🗺️ Land-by-land layout (tap to expand)</summary>
+        <div class="collapsible-body">
+          <p class="layout-intro" id="layoutIntro"></p>
+          <div class="land-list" id="landList"></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- SECRETS TAB -->
+    <div class="tab-panel" id="panel-secrets">
+      <div class="select-wrap">
+        <select class="filter-select" id="secretFilterSelect"></select>
+        <span class="select-arrow">▾</span>
+      </div>
+      <div class="secret-list" id="secretList"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer id="mainFooter">Made for the fam · tap a park to jump back 🎈</footer>
+
+<!-- BOTTOM TAB BAR (park screens) -->
+<nav class="tabbar hidden" id="tabbar" aria-label="Park sections">
+  <button data-tab="snacks" class="active"><span class="ticon">🍿</span>Snacks</button>
+  <button data-tab="strategy"><span class="ticon">🧭</span>Strategy</button>
+  <button data-tab="secrets"><span class="ticon">✨</span>Secrets</button>
+</nav>
+
+<!-- COOL-DOWN SPOTS MODAL -->
+<div class="modal-overlay" id="coolModalOverlay"></div>
+<div class="cool-modal" id="coolModal" role="dialog" aria-modal="true" aria-labelledby="coolModalTitle">
+  <div class="cool-modal-handle"></div>
+  <div class="cool-modal-head">
+    <div>
+      <div class="cool-modal-eyebrow">❄️ BEAT THE HEAT</div>
+      <h3 id="coolModalTitle">Park</h3>
+    </div>
+    <button class="icon-btn" id="coolModalClose" aria-label="Close">✕</button>
+  </div>
+  <div class="cool-modal-body" id="coolModalBody"></div>
+</div>
+
+<script>
+const PARKS = [
+  {
+    id:'epic', group:'universal', theme:'theme-epic', icon:'🌌', name:'Epic Universe',
+    tagline:'The new one — food and secrets are a whole event here.',
+    snacks:[
+      {emoji:'🍌', name:'DK Crush Float', location:'The Bubbly Barrel · SUPER NINTENDO WORLD', desc:'Banana-pineapple soft serve float with pineapple soda, caramel popcorn & toffee in a waffle bowl.', tags:['kid','pesc']},
+      {emoji:'🧀', name:'Mac & Cheese Cone (PB&J)', location:'Hooligan\'s Grog & Gruel · Isle of Berk', desc:'Pork, bacon & jam pulled pork with creamy mac & cheese, cone-style. Most-talked-about bite at Epic.', tags:['must']},
+      {emoji:'🥞', name:'Bièraubeurre Crêpe', location:'Café L\'air De La Sirène · Ministry of Magic', desc:'A Butterbeer crepe — cookie butter, Bavarian cream, strawberries, shortbread garnish.', tags:['must','pesc']},
+      {emoji:'🌶️', name:'Burning Cheddar Bites', location:'Burning Blade Tavern · Dark Universe', desc:'Fried jalapeño-pimento cheddar bites with sriracha ranch.', tags:['classic','pesc']},
+      {emoji:'🌕', name:'Pizza Lunare', location:'Pizza Moon · Celestial Park', desc:'Purple ube crust, roasted garlic béchamel, ricotta & pancetta. Locals rate this the best park pizza in Orlando.', tags:['new']},
+      {emoji:'🍰', name:'Princess Peach\'s Cake', location:'Toadstool Cafe · SUPER NINTENDO WORLD', desc:'Yellow cake, berries, sprinkles, topped with a Princess Peach cookie.', tags:['kid','pesc']},
+    ],
+    layout:{
+      intro:'Hub-and-spoke design: you enter into Celestial Park at the center, and four worlds branch off through themed portals. There\'s no direct path between worlds — everything routes back through the hub, and each portal transit takes 3–7 minutes. Walking to the farthest world takes 10–15 minutes.',
+      closure:null,
+      lands:[
+        {name:'Celestial Park (hub)', blurb:'Entrance and crossroads. Not just a walkthrough — holds Stardust Racers, Constellation Carousel, and a big share of the park\'s best food.'},
+        {name:'Super Nintendo World', blurb:'Multi-level with elevated walkways. Mario Kart & Donkey Kong\'s Mine-Cart Madness live here — expect the longest waits in the park.'},
+        {name:'Wizarding World — Ministry of Magic', blurb:'Paris-themed streets, interactive wand spell spots, Battle at the Ministry.'},
+        {name:'How to Train Your Dragon — Isle of Berk', blurb:'Viking village theming, Fyre Drill and Dragon Racer\'s Rally.'},
+        {name:'Dark Universe', blurb:'Classic monster-movie land — Curse of the Werewolf, Monsters Unchained, Darkmoor Village.'},
+      ]
+    },
+    bestTimes:{
+      intro:'Counter-flow is the whole game here: most guests sprint to Super Nintendo World and Ministry of Magic at open, so go the opposite direction first.',
+      tips:[
+        {emoji:'🔄', text:'Start at Dark Universe and Isle of Berk at rope drop. Save Super Nintendo World for early afternoon once the morning rush clears.'},
+        {emoji:'🏆', text:'Battle at the Ministry: ride it first if you have Early Park Admission — it stays busiest 2–8pm. Crowds here have trended lighter since spring 2026 overall, but day-to-day swings are big (some days near-empty, others slammed) — don\'t skip rope drop banking on a quiet day.'},
+        {emoji:'🏎️', text:'Mario Kart: Bowser\'s Challenge sweet spot is 11am–12pm before waits climb past 100 min. A second good window opens after 9pm.'},
+        {emoji:'🦍', text:'Mine-Cart Madness (Donkey Kong) is the single hottest ticket in Orlando right now — ride at rope drop or use single rider.'},
+        {emoji:'⏱️', text:'Budget the 3–7 minute portal walk time between worlds when planning your day — it adds up with a family of 5.'},
+        {emoji:'🎆', text:'Celestial Goodnight — the park\'s brand-new nighttime fountains-fireworks show — debuted July 7, one week before your trip. Stake out a spot near the Celestial Park fountains before close; most guests don\'t know it exists yet.'},
+      ]
+    },
+    secrets:[
+      {emoji:'🪄', name:'Hidden spell locations', location:'Ministry of Magic streets', desc:'Interactive wands trigger effects at several secret spots tucked around the Parisian streets — a scavenger hunt if you buy an interactive wand.', who:['kid9','teen13'], interactive:true},
+      {emoji:'🌙', name:'Celestial Park at night', desc:'Fountain shows and lighting give the Chronos tower a completely different glow after dark. Worth a lap after fireworks-equivalent hours.', location:'Celestial Park', who:['everyone','parents']},
+      {emoji:'🥚', name:'Power-Up Band mini-games + hidden golden egg', location:'Super Nintendo World ($45 wristband, required for gameplay)', desc:'Unlocks dozens of mini-games across the multi-level land and tracks digital coins/stamps. One well-known hunt: a golden egg hidden somewhere in Yoshi\'s Island. Worth it if the 9 and 13 year old are into collecting; skip if you\'d rather just ride.', who:['kid9','teen13'], interactive:true},
+      {emoji:'🎻', name:'The roaming violinist', location:'Darkmoor Village, Dark Universe', desc:'A wandering violinist plays haunting melodies and shares monster legends — easy to miss if you\'re rushing to the rides.', who:['teen13','adult22','parents']},
+      {emoji:'🚗', name:'Flux Capacitor easter egg', location:'Stardust Racers ride vehicles', desc:'A Back to the Future nod on the rear of the ride vehicles — good one for the parents to point out.', who:['parents','everyone']},
+    ],
+    coolSpots:[
+      {emoji:'🎪', name:'Le Cirque Arcanus', location:'Ministry of Magic · scheduled showtimes', desc:'A ~20-minute indoor circus show — catch it during the 1–4pm heat peak instead of standing in a ride line.', type:'show'},
+      {emoji:'🐉', name:'The Untrainable Dragon', location:'Isle of Berk · scheduled showtimes', desc:'Indoor, air-conditioned stage show in the Viking village — another good midday sit-down break.', type:'show'},
+      {emoji:'⚔️', name:'Battle at the Ministry', location:'Ministry of Magic', desc:'Indoor dark ride, fully air-conditioned building — the park\'s consensus best ride and a genuine AC break, just budget for the wait.', type:'ride'},
+      {emoji:'🐺', name:'Curse of the Werewolf', location:'Dark Universe', desc:'Indoor dark ride through Darkmoor Village — enclosed and air-conditioned start to finish.', type:'ride'},
+      {emoji:'🧟', name:'Monsters Unchained: The Frankenstein Experiment', location:'Dark Universe', desc:'Indoor dark ride, fully enclosed and air-conditioned — one of the park\'s top-rated attractions.', type:'ride'},
+      {emoji:'🏎️', name:'Mario Kart: Bowser\'s Challenge', location:'Super Nintendo World', desc:'Indoor ride blending physical sets with VR headsets — enclosed and air-conditioned, though it\'s also the hottest-ticket queue in the park.', type:'ride'},
+      {emoji:'🍽️', name:'Any table-service restaurant', location:'Across all 4 worlds', desc:'All indoor dining at Epic Universe is air-conditioned — book a sit-down lunch to fully reset instead of grabbing a quick snack.', type:'dining'},
+      {emoji:'⛲', name:'Celestial Park fountains', location:'Central hub, in front of Universal Helios Grand Hotel', desc:'Not AC, but shaded seating near the fountains is the best outdoor cool-down if indoor spots are packed — this area now anchors the new "Celestial Goodnight" nighttime fireworks show too.', type:'shade'},
+    ]
+  },
+  {
+    id:'ioa', group:'universal', theme:'theme-ioa', icon:'🌋', name:'Islands of Adventure',
+    tagline:'The classics you already love.',
+    snacks:[
+      {emoji:'🍺', name:'Butterbeer', location:'Hogsmeade', desc:'Cold, frozen, or hot — the original theme park obsession. Dairy-free version now available too.', tags:['must','pesc']},
+      {emoji:'🍗', name:'Giant Turkey Leg', location:'Near Three Broomsticks, Hogsmeade', desc:'Smoky, oversized, and a genuine Orlando theme-park rite of passage.', tags:['classic']},
+      {emoji:'🥚', name:'Green Eggs and Ham', location:'Circus McGurkus Café · Seuss Landing', desc:'Literally green eggs and ham. Novelty win for the kids, guaranteed photo.', tags:['kid']},
+      {emoji:'🍽️', name:'Mythos Restaurant', location:'Lost Continent', desc:'Repeat "Best Theme Park Restaurant" winner. Sit-down, mixed menu — has non-meat options if you ask.', tags:['classic']},
+    ],
+    layout:{
+      intro:'Eight themed islands ringed around a central lagoon — one big loop, no shortcuts across the middle. Walking the full loop without stopping takes 15–20 minutes.',
+      closure:'Two to know: Poseidon\'s Fury has closed permanently in Lost Continent (now mostly a walkthrough plus Mythos Restaurant), and Jurassic Park River Adventure is closed for a major refurbishment until November 20, 2026 — no water ride in Jurassic Park this trip, so plan Popeye\'s Bilge-Rat Barges in Toon Lagoon for your get-soaked fix.',
+      lands:[
+        {name:'Port of Entry', blurb:'Main entrance, shops and services.'},
+        {name:'Marvel Super Hero Island', blurb:'Right off Port of Entry — Hulk Coaster, Spider-Man, Doctor Doom\'s Fearfall.'},
+        {name:'Toon Lagoon', blurb:'Water rides — Popeye & Bluto\'s Bilge-Rat Barges, Ripsaw Falls.'},
+        {name:'Skull Island', blurb:'Reign of Kong dark ride.'},
+        {name:'Jurassic Park', blurb:'VelociCoaster and the Discovery Center — River Adventure is closed for refurb until Nov 20, 2026.'},
+        {name:'Wizarding World — Hogsmeade', blurb:'Forbidden Journey, Hagrid\'s, Hogwarts Express to Diagon Alley (park-to-park ticket required).'},
+        {name:'The Lost Continent', blurb:'Slimmed down since Poseidon\'s Fury closed — now mostly Mythos Restaurant.'},
+        {name:'Seuss Landing', blurb:'Completes the loop back to entrance — gentle rides for younger kids.'},
+      ]
+    },
+    bestTimes:{
+      intro:'Most guests beeline straight to Hogsmeade at open — go the opposite way around the loop to dodge them.',
+      tips:[
+        {emoji:'🔄', text:'Walk counterclockwise: Marvel → Toon Lagoon → Skull Island → Jurassic Park → Hogsmeade, arriving at the busiest land last instead of first.'},
+        {emoji:'🦖', text:'VelociCoaster and Hagrid\'s/Forbidden Journey are the highest-demand rides — hit them early or use single rider where offered.'},
+        {emoji:'🚂', text:'If you have park-to-park tickets, the Hogwarts Express is a fun way to reset the day by riding over to Diagon Alley at USF.'},
+      ]
+    },
+    secrets:[
+      {emoji:'🦉', name:'Send real mail from the Owlery', location:'Hogsmeade', desc:'You can actually send postcards through Owl Post — they arrive with a special Hogsmeade postmark. Great souvenir for grandparents.', who:['kid9','everyone']},
+      {emoji:'🍽️', name:'Confisco Grille', location:'Port of Entry', desc:'Eclectic global menu (Asian, Turkish, Mediterranean, Greek) that most guests walk past — a nice change of pace from theme park food.', who:['parents','adult22']},
+      {emoji:'🪄', name:'Interactive wand spell spots', location:'Hogsmeade', desc:'Marked locations throughout the village trigger spell effects with an interactive wand — a built-in scavenger hunt.', who:['kid9','teen13'], interactive:true},
+    ],
+    coolSpots:[
+      {emoji:'🦖', name:'Jurassic Park Discovery Center', location:'Jurassic Park', desc:'Free, indoor, air-conditioned, and interactive — dino eggs, DNA scanners. Usually walk-in with no wait, and genuinely fun for the 9-year-old.', type:'show'},
+      {emoji:'🏰', name:'Harry Potter and the Forbidden Journey', location:'Hogsmeade', desc:'The whole experience — queue through Hogwarts\' indoor corridors plus the ride itself — is enclosed and air-conditioned start to finish.', type:'ride'},
+      {emoji:'🦍', name:'Skull Island: Reign of Kong', location:'Skull Island', desc:'Indoor trackless dark ride through a jungle temple — fully enclosed, air-conditioned, and has a single-rider line to cut the wait.', type:'ride'},
+      {emoji:'🕷️', name:'The Amazing Adventures of Spider-Man', location:'Marvel Super Hero Island', desc:'Indoor 3D dark ride, fully air-conditioned — a classic that holds up.', type:'ride'},
+      {emoji:'🍽️', name:'Mythos Restaurant / Confisco Grille', location:'Lost Continent / Port of Entry', desc:'Both are full air-conditioned sit-down dining — a real reset over a quick-service stop.', type:'dining'},
+      {emoji:'💦', name:'If I Ran the Zoo play area', location:'Seuss Landing', desc:'Not AC, but shaded tunnels and a splash pad give the 9-year-old somewhere to burn energy while staying cool.', type:'shade'},
+    ]
+  },
+  {
+    id:'usf', group:'universal', theme:'theme-usf', icon:'🎬', name:'Universal Studios FL',
+    tagline:'Diagon Alley + Hollywood classics.',
+    snacks:[
+      {emoji:'🍺', name:'Butterbeer', location:'Diagon Alley', desc:'Same magic, other side of the Wizarding World — grab the frozen version if it\'s hot out.', tags:['must','pesc']},
+      {emoji:'🐟', name:'Fish & Chips', location:'Leaky Cauldron · Diagon Alley', desc:'Genuine British pub food — the best sit-down option in the Wizarding World.', tags:['classic','pesc']},
+      {emoji:'🍩', name:'Voodoo Doll Doughnut', location:'Voodoo Doughnut · near CityWalk/USF entrance', desc:'Raspberry jelly, chocolate frosting, pretzel stake. The Portland legend, Orlando outpost.', tags:['must','pesc']},
+      {emoji:'🍦', name:'Butterbeer Ice Cream', location:'Florean Fortescue\'s · Diagon Alley', desc:'Butterbeer, but frozen and scoopable. Great heat-of-the-day option.', tags:['kid','pesc']},
+      {emoji:'🍔', name:'Krusty Burger + Duff Beer', location:'Springfield, U.S.A.', desc:'Full Simpsons bit — burger, Duff for the grown-ups, Buzz Cola for the kids.', tags:['adult']},
+    ],
+    layout:{
+      intro:'A working-studio-style layout organized in loosely connected zones rather than a strict loop. Diagon Alley sits at one end and connects via the Hogwarts Express to Islands of Adventure (park-to-park ticket required).',
+      closure:null,
+      lands:[
+        {name:'Production Central', blurb:'Near the main entrance — Transformers: The Ride-3D.'},
+        {name:'New York', blurb:'Race Through New York, Revenge of the Mummy.'},
+        {name:'San Francisco', blurb:'Fast & Furious – Supercharged.'},
+        {name:'Wizarding World — Diagon Alley', blurb:'Escape from Gringotts, Ollivanders, Hogwarts Express station.'},
+        {name:'World Expo', blurb:'MEN IN BLACK Alien Attack, The Simpsons Ride.'},
+        {name:'Illumination\'s Minion Land', blurb:'Despicable Me Minion Mayhem, Villain-Con Minion Blast.'},
+        {name:'DreamWorks Land', blurb:'Trolls Trollercoaster.'},
+        {name:'Hollywood', blurb:'E.T. Adventure.'},
+      ]
+    },
+    bestTimes:{
+      intro:'Diagon Alley is the draw — visit early before park-hoppers arrive from Islands of Adventure via the Hogwarts Express.',
+      tips:[
+        {emoji:'🏰', text:'Ride Escape from Gringotts and explore Diagon Alley in the first hour or two, before IOA guests hop over.'},
+        {emoji:'🚂', text:'Use the Hogwarts Express as a scenic "commute" between USF and IOA instead of walking — it doubles as a mini-attraction.'},
+      ]
+    },
+    secrets:[
+      {emoji:'🍸', name:'600 Block Speakeasy', location:'Inside Pat O\'Brien\'s, CityWalk', desc:'A hidden Prohibition-era bar — get a membership card from Pat O\'Brien\'s with a clue to the secret password, follow green signs to a disguised door, knock and give the password. Live jazz Thu–Sat. Adults-only, running through August 23, 2026 — covers your whole trip.', who:['adult22','parents']},
+      {emoji:'🪄', name:'Interactive wand spell spots', location:'Diagon Alley', desc:'Same idea as Hogsmeade — marked spots around the alley trigger spell effects with an interactive wand.', who:['kid9','teen13'], interactive:true},
+    ],
+    coolSpots:[
+      {emoji:'🚂', name:'King\'s Cross Station', location:'Diagon Alley entrance', desc:'Fully indoor and heavily air-conditioned, with a food and drink stand partway through — linger here even if you\'re not riding the Hogwarts Express.', type:'ride'},
+      {emoji:'🪄', name:'Ollivanders', location:'Diagon Alley', desc:'Small indoor wand-choosing show — air-conditioned with a shaded queue.', type:'show'},
+      {emoji:'🏦', name:'Harry Potter and the Escape from Gringotts', location:'Diagon Alley', desc:'Indoor dark ride/coaster hybrid, fully enclosed and air-conditioned.', type:'ride'},
+      {emoji:'🎬', name:'MIB Alien Attack / Revenge of the Mummy', location:'World Expo / New York', desc:'Both rides have fully indoor, air-conditioned queues and ride buildings.', type:'ride'},
+      {emoji:'🗽', name:'Race Through New York Starring Jimmy Fallon', location:'New York', desc:'Indoor simulator ride, fully air-conditioned and usually a shorter wait than the headliners.', type:'ride'},
+      {emoji:'🏎️', name:'Fast & Furious – Supercharged', location:'San Francisco', desc:'Indoor simulator ride, fully enclosed and air-conditioned.', type:'ride'},
+      {emoji:'🤖', name:'Transformers: The Ride-3D', location:'Production Central', desc:'Indoor simulator ride, fully air-conditioned.', type:'ride'},
+      {emoji:'🍌', name:'Despicable Me Minion Mayhem', location:'Illumination\'s Minion Land', desc:'Indoor simulator ride, fully air-conditioned — gentle enough for the whole family.', type:'ride'},
+      {emoji:'👽', name:'E.T. Adventure', location:'Hollywood', desc:'Classic indoor dark ride, fully enclosed and air-conditioned — an easy-to-miss quiet option.', type:'ride'},
+      {emoji:'🍩', name:'The Simpsons Ride', location:'World Expo', desc:'Indoor simulator ride, fully air-conditioned.', type:'ride'},
+      {emoji:'🍽️', name:'Leaky Cauldron', location:'Diagon Alley', desc:'Air-conditioned British pub dining — a good excuse for a longer sit-down break.', type:'dining'},
+    ],
+    coolClosedNote:'The Universal Horror Make-Up Show closed May 12, 2026 for a full reimagining and isn\'t expected back until winter 2026 at the earliest (possibly not until 2027) — it will NOT be running during your trip.'
+  },
+  {
+    id:'vb', group:'universal', theme:'theme-vb', icon:'🏝️', name:'Volcano Bay',
+    tagline:'Water park day = snack strategy day.',
+    snacks:[
+      {emoji:'🌈', name:'Waturi Fusion Ice Cream', location:'Kiosks near River Village', desc:'Banana, blue raspberry, strawberry & orange swirl — built for a hot July day.', tags:['kid','pesc']},
+      {emoji:'🧋', name:'Volcano Boba', location:'Dancing Dragons Bar', desc:'Pineapple juice, coconut water, blue curaçao, mango boba. One for the 22-year-old.', tags:['adult']},
+      {emoji:'🍕', name:'Longboard Pizza, Island BBQ Chicken', location:'Whakawaiwai Eats', desc:'Mango BBQ chicken, red onion, gouda. Good one to split as a family (cheese/veggie options also on the menu).', tags:['classic']},
+      {emoji:'🍫', name:'Chocolate Lava Cake', location:'Kohola Reef Restaurant & Social Club', desc:'Molten center, volcano-themed park, no notes.', tags:['must','pesc']},
+    ],
+    layout:{
+      intro:'Centered on the 200-foot Krakatau volcano, with the whole park walkable end-to-end in under 10 minutes. Krakatau is visible from almost everywhere and doubles as your compass.',
+      closure:'Volcano Bay closes entirely from October 26, 2026 through spring 2027 for its longest-ever refurbishment — doesn\'t affect your July dates, but good to know if you were considering a return trip later this year.',
+      lands:[
+        {name:'Wave Village', blurb:'First area past the entrance — Waturi Beach wave pool at the base of the volcano.'},
+        {name:'River Village', blurb:'The gentle side — lazy river, family raft slides, dedicated little-kid areas.'},
+        {name:'Rainforest Village', blurb:'The thrill zone — Krakatau Aqua Coaster, TeAwa the Fearless River.'},
+        {name:'Krakatau (center)', blurb:'The most intense slides live inside/around the volcano itself — Ko\'okiri Body Plunge, Kala & Tai Nui.'},
+      ]
+    },
+    bestTimes:{
+      intro:'TapuTapu is the whole strategy — wear it, tap it at a slide, and it buzzes when your turn comes up so you never have to physically stand in line.',
+      tips:[
+        {emoji:'🌅', text:'Arrive at rope drop to grab a good beach or cabana spot first, then let TapuTapu virtual-queue the slides while you relax.'},
+        {emoji:'🌙', text:'Volcano Bay Nights lands twice in your window: Thursday, July 16 and Friday, July 17 (7–11pm, early entry 4pm). $99/person after-hours event — lower waits, lighting show, meet-and-greets, DJ.'},
+      ]
+    },
+    secrets:[
+      {emoji:'🌋', name:'Explore inside Krakatau', location:'Center of the park', desc:'You can actually walk inside the volcano through its caverns — there\'s a landing partway through with a great view back out over Waturi Beach.', who:['everyone','kid9']},
+      {emoji:'🌙', name:'Volcano Bay Nights', location:'Thu Jul 16 & Fri Jul 17 · $99/person', desc:'Reduced waits, special lighting, character meet-and-greets, DJ and games — a completely different park vibe after dark. Two dates land inside your trip window, so book whichever night fits your schedule.', who:['everyone','teen13']},
+    ],
+    coolSpots:[
+      {emoji:'☂️', name:'Shaded rest structures', location:'Throughout the park', desc:'Free, no reservation — covered seating areas with fans and island music scattered across the park. Volcano Bay doesn\'t have big indoor AC buildings since it\'s a water park, so these are your best bet.', type:'shade'},
+      {emoji:'🎋', name:'Bambu', location:'Rainforest Village', desc:'A shaded, breezy quick-service hideaway that feels noticeably cooler than the open beach areas.', type:'shade'},
+      {emoji:'🍽️', name:'Kohola Reef Restaurant & Social Club', location:'Wave Village, base of Krakatau', desc:'The park\'s biggest dining spot with the widest menu and the most covered seating if you need a longer sit-down break.', type:'dining'},
+      {emoji:'🛋️', name:'Private cabana rental', location:'Book in advance / at Guest Services', desc:'Shade, loungers, a fridge with water, and food delivery — worth it for a family of 5 on a full-sun July day.', type:'shade'},
+    ]
+  },
+  {
+    id:'mk', group:'disney', theme:'theme-mk', icon:'🏰', name:'Magic Kingdom',
+    tagline:'The classics, plus new Cool Kid Summer treats.',
+    snacks:[
+      {emoji:'🥟', name:'Cheeseburger Spring Rolls', location:'Adventureland Spring Roll Cart', desc:'Crispy shell, beef, cheese, pickle tang inside. Sells out fast.', tags:['must']},
+      {emoji:'🚀', name:'Space Ranger Float', location:'Auntie Gravity\'s Galactic Goodies · Tomorrowland', desc:'Dole Whip Lime + vanilla swirl, Sprite, green apple pearls. New for Cool Kid Summer, running through your dates.', tags:['new','pesc']},
+      {emoji:'🥓', name:'Bacon on a Stick', location:'Westward Ho · Frontierland', desc:'Thick-cut, brown-sugar coated. A genuine cult favorite.', tags:['classic']},
+      {emoji:'🍍', name:'Dole Whip', location:'Aloha Isle · Adventureland', desc:'The original. Non-negotiable, still the gold standard.', tags:['must','pesc']},
+      {emoji:'🎂', name:'Mickey Premium Ice Cream Bar', location:'Carts throughout the park', desc:'Easiest win in the whole resort — always nearby when someone melts down from heat.', tags:['kid','pesc']},
+    ],
+    layout:{
+      intro:'Classic hub-and-spoke: six lands radiate out from the central hub in front of Cinderella Castle. About 107 acres total.',
+      closure:'Frontierland is under active construction — Rivers of America and Tom Sawyer Island have permanently closed to make way for Piston Peak, a new Cars-themed land. Expect walkway changes in that corner. Also: Mickey\'s Magical Friendship Faire (the castle stage show) is down for maintenance through July 14 — if MK is your day one, it may not be running; it should be back from July 15 on.',
+      lands:[
+        {name:'Main Street, U.S.A.', blurb:'Entrance corridor leading to the central hub.'},
+        {name:'Adventureland', blurb:'Pirates of the Caribbean, Jungle Cruise, Dole Whip.'},
+        {name:'Frontierland', blurb:'Big Thunder Mountain, Tiana\'s Bayou Adventure — under construction for Piston Peak (Cars land).'},
+        {name:'Liberty Square', blurb:'Haunted Mansion, Hall of Presidents.'},
+        {name:'Fantasyland', blurb:'Seven Dwarfs Mine Train, Peter Pan\'s Flight, "it\'s a small world".'},
+        {name:'Tomorrowland', blurb:'TRON Lightcycle Run, Space Mountain, Buzz Lightyear.'},
+      ]
+    },
+    bestTimes:{
+      intro:'Arrive 45–60 minutes before official opening. Two rides define your morning.',
+      tips:[
+        {emoji:'⚡', text:'TRON Lightcycle Run is priority #1 — it can hit 60–90 min waits by 9am despite an 8-min wait at rope drop. Ride it first.'},
+        {emoji:'⛏️', text:'Seven Dwarfs Mine Train is priority #2 — high capacity but fills fast since families with young kids head there first too.'},
+        {emoji:'☀️', text:'The mid-morning lull (about 1 hour after opening, lasting ~2 hours) is your second sweet spot for major attractions.'},
+      ]
+    },
+    secrets:[
+      {emoji:'🌹', name:'Enchanted Tales with Belle', location:'Fantasyland', desc:'An intimate, interactive story experience where guests become part of the "Beauty and the Beast" retelling inside Belle\'s cottage — often overlooked in favor of the coasters.', who:['kid9','everyone']},
+      {emoji:'🗺️', name:'A Pirate\'s Adventure: Treasures of the Seven Seas', location:'Cartography Shop near Golden Oak Outpost, Adventureland', desc:'Free treasure-hunt game — tap a MagicBand to get assigned one of 5 missions (~20 min each, pausable, no time limit). Only runs 12pm–6pm daily, so don\'t plan for it at rope drop.', who:['kid9','teen13','everyone'], interactive:true},
+      {emoji:'🚻', name:'Quiet restrooms', location:'Between Enchanted Tales with Belle and Pinocchio Village Haus', desc:'Tucked off the main path and rarely busy — good regroup spot when the 9-year-old needs a reset.', who:['parents']},
+    ],
+    coolSpots:[
+      {emoji:'🎤', name:'Hall of Presidents', location:'Liberty Square', desc:'23-minute seated, air-conditioned show — one of the longest AC breaks in the park.', type:'show'},
+      {emoji:'🐻', name:'Country Bear Musical Jamboree', location:'Frontierland', desc:'A shorter, high-energy AC show with a new set list — good if the little one can\'t sit still for 20+ minutes.', type:'show'},
+      {emoji:'🌍', name:'"it\'s a small world"', location:'Fantasyland', desc:'A slow, air-conditioned boat ride — the easiest way to cool down without waiting in a long line.', type:'ride'},
+      {emoji:'🎪', name:'Pete\'s Silly Sideshow', location:'Storybook Circus, Fantasyland', desc:'Indoor, air-conditioned character meet-and-greet tent with Minnie, Daisy, Donald and Goofy — reopened summer 2026 after refurbishment.', type:'show'},
+      {emoji:'🦜', name:'Walt Disney\'s Enchanted Tiki Room', location:'Sunshine Pavilion, Adventureland', desc:'15-minute indoor animatronic bird show with strong AC — a classic, often-skipped attraction that\'s an easy sit-down reset. Exterior roof work is underway but the show stays open throughout.', type:'show'},
+      {emoji:'🏴‍☠️', name:'Pirates of the Caribbean', location:'Adventureland', desc:'Indoor boat ride, fully air-conditioned and dark — a slow, easy reset.', type:'ride'},
+      {emoji:'👻', name:'Haunted Mansion', location:'Liberty Square', desc:'Indoor "Omnimover" dark ride, fully enclosed and air-conditioned.', type:'ride'},
+      {emoji:'🧚', name:'Peter Pan\'s Flight', location:'Fantasyland', desc:'Indoor dark ride, fully air-conditioned — short but a genuine break from the sun.', type:'ride'},
+      {emoji:'🧜', name:'Under the Sea: Journey of the Little Mermaid', location:'Fantasyland', desc:'Indoor dark ride, fully air-conditioned and gentle enough for every age.', type:'ride'},
+      {emoji:'🎻', name:'Mickey\'s PhilharMagic', location:'Fantasyland', desc:'Indoor 3D theater show, fully air-conditioned — gives everyone a real seat and a break off their feet.', type:'show'},
+      {emoji:'🌹', name:'Enchanted Tales with Belle', location:'Fantasyland', desc:'Indoor interactive storytelling experience inside Belle\'s cottage, fully air-conditioned — also listed under Secrets since it\'s easy to miss.', type:'show'},
+      {emoji:'😂', name:'Monsters, Inc. Laugh Floor', location:'Tomorrowland', desc:'Indoor interactive comedy show, fully air-conditioned — audience texts in jokes, seated the whole time.', type:'show'},
+      {emoji:'🚀', name:'Buzz Lightyear\'s Space Ranger Spin', location:'Tomorrowland', desc:'Indoor dark ride, fully air-conditioned.', type:'ride'},
+      {emoji:'🌌', name:'Space Mountain', location:'Tomorrowland', desc:'Indoor coaster in the dark, fully enclosed — AC quality varies but it\'s out of direct sun.', type:'ride'},
+    ],
+    coolClosedNote:'Carousel of Progress is closed for a full refurbishment that began July 6, 2026 and won\'t reopen until 2027 — it will NOT be running during your trip, so it\'s left off this list.'
+  },
+  {
+    id:'epcot', group:'disney', theme:'theme-epcot', icon:'🌐', name:'EPCOT',
+    tagline:'No festival in July — World Showcase staples instead.',
+    snacks:[
+      {emoji:'🍞', name:'School Bread', location:'Kringla Bakeri Og Kafe · Norway Pavilion', desc:'Cardamom bun, vanilla custard, coconut. A World Showcase institution.', tags:['classic','pesc']},
+      {emoji:'🥨', name:'Pretzel Nuggets with Beer Cheese', location:'Block & Hans · American Adventure', desc:'Garlic-butter pretzel bites, smoky beer cheese sauce.', tags:['must','pesc']},
+      {emoji:'🧀', name:'Chicken Goof-Ups', location:'Grab-n-Goof · new Cool Kid Summer stand', desc:'Breaded chicken bites, fried cheese curds, Goofy sauce.', tags:['new']},
+      {emoji:'🥞', name:'Giant Crepe', location:'Crêpes À Emporter · France Pavilion', desc:'Cheese, mushroom, ham, arugula, stuffed full.', tags:['classic']},
+      {emoji:'🎣', name:'Goofy\'s Gone Fishing', location:'Grab-n-Goof · new Cool Kid Summer stand', desc:'Blue raspberry lemonade, fruit pearls, fish or shark gummy candy. Kid magnet.', tags:['kid','pesc']},
+    ],
+    layout:{
+      intro:'Split into four neighborhoods. The front half (World Celebration, World Discovery, World Nature) is ride-focused; the back half (World Showcase) wraps 11 country pavilions around a lagoon. World Showcase doesn\'t open until 11am — two hours after the rest of the park.',
+      closure:null,
+      lands:[
+        {name:'World Celebration', blurb:'Central hub at the entrance — Spaceship Earth.'},
+        {name:'World Discovery', blurb:'Guardians of the Galaxy: Cosmic Rewind, Test Track, Mission: SPACE.'},
+        {name:'World Nature', blurb:'Journey of Water, Living with the Land, The Seas with Nemo & Friends.'},
+        {name:'World Showcase', blurb:'11 countries around the lagoon — Mexico, Norway, China, Germany, Italy, USA, Japan, Morocco, France, UK, Canada.'},
+      ]
+    },
+    bestTimes:{
+      intro:'No festival during your visit means smaller crowds than a fall or spring trip — but the schedule quirk still matters.',
+      tips:[
+        {emoji:'🌅', text:'Ride Cosmic Rewind and Test Track first thing — World Showcase isn\'t open yet anyway, so front-load the thrill rides.'},
+        {emoji:'🌍', text:'Head to World Showcase right at 11am open — the first 30–60 minutes there are noticeably quieter.'},
+      ]
+    },
+    secrets:[
+      {emoji:'🦆', name:'DuckTales World Showcase Adventure', location:'Free via Play Disney Parks app, across World Showcase', desc:'Join Scrooge McDuck hunting 7 Lost Magic Treasures hidden in the Mexico, Norway, China, Germany, Japan, France & UK pavilions. Free, self-paced, and genuinely the best way to make World Showcase interesting for a 9 and 13 year old.', who:['kid9','teen13','everyone'], interactive:true},
+      {emoji:'🌸', name:'Japanese Secret Garden', location:'Japan Pavilion', desc:'Koi pond, waterfalls, manicured plants, with quick-service ramen or sushi you can eat right there in the garden seating.', who:['parents','adult22','everyone']},
+      {emoji:'🌹', name:'The Rose Garden', location:'United Kingdom Pavilion', desc:'A quiet photo and rest spot most guests walk straight past on their way to the next pavilion.', who:['parents','adult22']},
+      {emoji:'🥐', name:'Les Halles Boulangerie-Patisserie', location:'Back of the France Pavilion', desc:'Get there early for coffee and pastries with actual seating — a nice quiet start before the crowds build.', who:['parents','everyone']},
+    ],
+    coolSpots:[
+      {emoji:'🕺', name:'GoofyCore', location:'CommuniCore Hall, World Celebration', desc:'New for 2026 — a free, indoor, air-conditioned dance-and-play space with Goofy-themed games. Genuinely built for kids to burn energy indoors.', type:'show'},
+      {emoji:'🌍', name:'Spaceship Earth', location:'World Celebration', desc:'A slow-moving, fully air-conditioned dark ride — an easy, low-stimulation cooldown.', type:'ride'},
+      {emoji:'🪂', name:'Soarin\' Across America', location:'World Nature', desc:'Indoor hang-gliding simulator, fully air-conditioned — the new 2026 version of Soarin\'.', type:'ride'},
+      {emoji:'🚀', name:'Mission: SPACE', location:'World Discovery', desc:'Indoor simulator ride, fully air-conditioned — the Green (mild) side is calmer than the Orange (intense) side.', type:'ride'},
+      {emoji:'🏁', name:'Test Track', location:'World Discovery', desc:'Indoor design studio and queue with most of the ride enclosed and air-conditioned — only the final loop briefly goes outdoors.', type:'ride'},
+      {emoji:'🐠', name:'The Seas with Nemo & Friends', location:'World Nature', desc:'Slow indoor "clammobile" ride, fully air-conditioned, ending at a real aquarium — good for a very low-key reset.', type:'ride'},
+      {emoji:'🎨', name:'Journey Into Imagination with Figment', location:'World Celebration', desc:'Indoor dark ride, fully air-conditioned and gentle.', type:'ride'},
+      {emoji:'🌎', name:'Awesome Planet', location:'The Land Pavilion, World Nature', desc:'10-minute indoor film on a big screen, fully air-conditioned — easy seated break.', type:'show'},
+      {emoji:'🐢', name:'Turtle Talk with Crush', location:'The Seas Pavilion, World Nature', desc:'Interactive indoor AC show where Crush "talks" live to kids in the audience — a hit with the 9-year-old.', type:'show'},
+      {emoji:'🎭', name:'The American Adventure', location:'American Adventure Pavilion, World Showcase', desc:'A ~30-minute indoor, air-conditioned show — the longest sit-down break in World Showcase.', type:'show'},
+      {emoji:'💃', name:'Gran Fiesta Tour', location:'Mexico Pavilion, World Showcase', desc:'Indoor boat ride inside the Mexico pyramid, fully air-conditioned and usually walk-on.', type:'ride'},
+      {emoji:'❄️', name:'Frozen Ever After', location:'Norway Pavilion, World Showcase', desc:'Indoor boat ride, fully air-conditioned — expect a real wait, but it\'s a genuine cooldown once inside.', type:'ride'},
+      {emoji:'🐭', name:'Remy\'s Ratatouille Adventure', location:'France Pavilion, World Showcase', desc:'Indoor trackless dark ride, fully air-conditioned.', type:'ride'},
+      {emoji:'🎬', name:'Reflections of China', location:'China Pavilion, World Showcase', desc:'Indoor 360-degree film, fully air-conditioned — standing room but genuinely cool and quiet.', type:'show'},
+      {emoji:'🎥', name:'Impressions de France', location:'France Pavilion, World Showcase', desc:'Indoor film in a traditional seated theater, fully air-conditioned.', type:'show'},
+      {emoji:'🍁', name:'Canada Far and Wide (O Canada!)', location:'Canada Pavilion, World Showcase', desc:'Indoor 360-degree standing film, fully air-conditioned.', type:'show'},
+    ],
+    coolClosedNote:'Living with the Land (The Land Pavilion) was unexpectedly and permanently closed in early February 2026 and is being demolished — it will NOT be running during your trip, even though older guides still list it.'
+  },
+  {
+    id:'hs', group:'disney', theme:'theme-hs', icon:'🎬', name:'Hollywood Studios',
+    tagline:'Toy Story Land + new summer sipper.',
+    snacks:[
+      {emoji:'🌮', name:'Totchos', location:'Woody\'s Lunch Box · Toy Story Land', desc:'Tater tots loaded with chili, cheese, sour cream. Messy, nostalgic, perfect.', tags:['must']},
+      {emoji:'🍪', name:'Jack-Jack Cookie Num Nums', location:'Woody\'s Lunch Box · Toy Story Land', desc:'Chocolate chip cookie sandwich, an Incredibles-era classic.', tags:['classic','pesc']},
+      {emoji:'🥕', name:'Carrot Cake Cookie', location:'Trolley Car Café', desc:'Two spiced carrot cake cookies, cream cheese frosting center.', tags:['classic','pesc']},
+      {emoji:'🐿️', name:'Chip \'n\' Dale Animade', location:'Snack cart near Walt Disney Studios Lot', desc:'Lemonade, pineapple juice, watermelon syrup in a keepsake sipper. Limit 2 per order — new for summer.', tags:['new','pesc']},
+    ],
+    layout:{
+      intro:'Enter via Hollywood Boulevard toward the Chinese Theatre. Echo Lake and Commissary Lane branch left, Sunset Boulevard branches right (dead-ends — you walk back the way you came), and Toy Story Land / Galaxy\'s Edge sit at the back.',
+      closure:'The former Muppets Courtyard/Grand Avenue area is closed for construction of Monsters, Inc. Land (Monstropolis), which will include Disney\'s first vertical lift suspended coaster.',
+      lands:[
+        {name:'Hollywood Boulevard', blurb:'Main entrance street — Mickey & Minnie\'s Runaway Railway inside the Chinese Theatre.'},
+        {name:'Sunset Boulevard', blurb:'Tower of Terror, Rock \'n\' Roller Coaster, Fantasmic — no through-exit.'},
+        {name:'Echo Lake', blurb:'Indiana Jones Epic Stunt Spectacular, Frozen Sing-Along.'},
+        {name:'Toy Story Land', blurb:'Slinky Dog Dash, Alien Swirling Saucers.'},
+        {name:'Star Wars: Galaxy\'s Edge', blurb:'Rise of the Resistance, Millennium Falcon: Smugglers Run.'},
+        {name:'Monstropolis (under construction)', blurb:'New Monsters, Inc. land replacing the old Muppets Courtyard/Grand Avenue.'},
+      ]
+    },
+    bestTimes:{
+      intro:'Rise of the Resistance and Slinky Dog Dash are the two headliners to prioritize.',
+      tips:[
+        {emoji:'🌟', text:'Ride Rise of the Resistance at rope drop — it\'s the single longest line in the park most days.'},
+        {emoji:'🐕', text:'Slinky Dog Dash next — also fills fast once Toy Story Land opens for the day.'},
+        {emoji:'🚶', text:'Use the path near Alien Swirling Saucers as your shortcut between Toy Story Land and Galaxy\'s Edge (4–6 min) instead of looping through the park center.'},
+      ]
+    },
+    secrets:[
+      {emoji:'📱', name:'Star Wars Datapad', location:'Galaxy\'s Edge, via Play Disney Parks app', desc:'Turns your phone into an in-world Datapad — hack droids, scan crates, translate Aurebesh, and run a bounty-hunting scavenger hunt with MagicBand+. Choices carry over if you visit again later in the week. Great for the 13 and 22 year old especially.', who:['teen13','adult22','everyone'], interactive:true},
+      {emoji:'🚪', name:'The Alien Swirling Saucers shortcut', location:'Between Toy Story Land & Galaxy\'s Edge', desc:'A fast connector path most guests don\'t know about — saves real time crossing the park with tired kids.', who:['parents','everyone']},
+    ],
+    coolSpots:[
+      {emoji:'❄️', name:'Frozen Sing-Along Celebration', location:'Echo Lake', desc:'A ~25-minute seated, air-conditioned sing-along — one of the best full breaks in the park.', type:'show'},
+      {emoji:'🎥', name:'Walt Disney Presents', location:'Mickey Avenue, Walt Disney Studios Lot', desc:'A quiet, indoor, air-conditioned walk-through museum of Disney history — relocated here when this new land opened May 26, 2026. Easy to linger, rarely crowded.', type:'show'},
+      {emoji:'🐭', name:'Mickey & Minnie\'s Runaway Railway', location:'Hollywood Boulevard, inside the Chinese Theatre', desc:'Fully indoor, air-conditioned dark ride — a fun break that doubles as an attraction.', type:'ride'},
+      {emoji:'🧸', name:'Toy Story Mania!', location:'Toy Story Land', desc:'Indoor, air-conditioned 4D shooting-gallery ride — gentle enough for a real break and a genuine crowd favorite.', type:'ride'},
+      {emoji:'✨', name:'Rise of the Resistance', location:'Star Wars: Galaxy\'s Edge', desc:'Mostly indoor trackless dark ride and simulator, fully air-conditioned — the longest line in the park, but a real cooldown once you\'re in the queue building.', type:'ride'},
+      {emoji:'🚀', name:'Millennium Falcon: Smugglers Run', location:'Star Wars: Galaxy\'s Edge', desc:'Indoor simulator ride, fully air-conditioned.', type:'ride'},
+      {emoji:'🏨', name:'Tower of Terror', location:'Sunset Boulevard', desc:'Indoor drop ride through the Hollywood Tower Hotel, fully air-conditioned — plenty of AC in the queue too.', type:'ride'},
+      {emoji:'🎸', name:'Rock \'n\' Roller Coaster Starring the Muppets', location:'Sunset Boulevard', desc:'Indoor launch coaster in the dark, fully enclosed — reopened under this name May 26, 2026.', type:'ride'},
+      {emoji:'😈', name:'Disney Villains: Unfairly Ever After', location:'Sunset Showcase theater, Sunset Boulevard', desc:'Indoor stage show, fully air-conditioned, seated the whole time.', type:'show'},
+      {emoji:'🧜', name:'The Little Mermaid – A Musical Adventure', location:'Walt Disney Studios Lot', desc:'Indoor stage show, fully air-conditioned — stays open even while nearby construction continues.', type:'show'},
+    ],
+    coolClosedNote:'Star Wars Launch Bay permanently closed in 2025. Its replacement, The Magic of Disney Animation, is targeted for late summer 2026 but has no confirmed opening date yet — don\'t plan around it being open during your trip.'
+  },
+  {
+    id:'ak', group:'disney', theme:'theme-ak', icon:'🌳', name:'Animal Kingdom',
+    tagline:'Jungle heat calls for churros and frozen treats.',
+    snacks:[
+      {emoji:'🥨', name:'Churros with Dual Dipping Sauces', location:'Nomad Lounge', desc:'Vanilla crema plus a rotating seasonal mystery sauce.', tags:['must','pesc']},
+      {emoji:'🫓', name:'Cheese-Stuffed Arepas', location:'Smiling Crocodile', desc:'The arepa itself is cheese-stuffed (pescatarian-friendly); pulled pork or chicken are separate add-on options. Only served 11am–3pm.', tags:['classic','pesc']},
+      {emoji:'🍹', name:'Bluey\'s Berry Lemonade', location:'Eight Spoon Cafe & Pizzafari', desc:'Frozen lemonade with blueberry, blackberry, raspberry. New for summer.', tags:['new','pesc']},
+      {emoji:'🍨', name:'Wackadoo Fruit Freeze', location:'Pizzafari', desc:'Frozen fruit punch twist on Bluey\'s Fruit Salad, garnished with fruit.', tags:['kid','pesc']},
+      {emoji:'🍍', name:'Tamu Tamu Pineapple Soft-Serve', location:'Tamu Tamu Refreshments · Africa', desc:'Old-school Animal Kingdom favorite, easy to miss if you don\'t know to look.', tags:['classic','pesc']},
+    ],
+    layout:{
+      intro:'The Oasis (winding garden paths, not a straight boulevard) leads into Discovery Island at the center, with lands branching off it.',
+      closure:'DinoLand U.S.A. closed permanently on February 1, 2026, taking DINOSAUR, The Boneyard, and Restaurantosaurus with it. That corner of the map is now future-home space for Tropical Americas (Indiana Jones & Encanto attractions), targeted for 2027 — not open during your visit.',
+      lands:[
+        {name:'The Oasis', blurb:'First area past the gates — tropical garden paths with animal habitats tucked along the way.'},
+        {name:'Discovery Island', blurb:'Central hub — Tree of Life.'},
+        {name:'Pandora — The World of Avatar', blurb:'Avatar Flight of Passage (park\'s longest standby), Na\'vi River Journey.'},
+        {name:'Africa', blurb:'Harambe village, Kilimanjaro Safaris, Festival of the Lion King.'},
+        {name:'Asia', blurb:'Expedition Everest, Kali River Rapids.'},
+        {name:'Rafiki\'s Planet Watch', blurb:'Reached via Wildlife Express Train from Africa — now home to Bluey\'s Wild World.'},
+      ]
+    },
+    bestTimes:{
+      intro:'This park runs on animal activity and heat, not just crowd flow — timing matters more here than anywhere else.',
+      tips:[
+        {emoji:'🦁', text:'Ride Kilimanjaro Safaris first thing in the morning — animals are most active in the cool early hours.'},
+        {emoji:'🌏', text:'Avatar Flight of Passage in Pandora is the park\'s longest standby — rope drop priority if you\'re not using Lightning Lane.'},
+      ]
+    },
+    secrets:[
+      {emoji:'🎖️', name:'Wilderness Explorers', location:'HQ at Discovery Island, past the bridge near Tree of Life', desc:'Free self-paced badge scavenger hunt — over 20 badges across Discovery Island, Pandora, Africa, Rafiki\'s Planet Watch and Asia. Genuinely fun for a 9-year-old to "collect," light enough the 13 and 22 year old won\'t roll their eyes.', who:['kid9','everyone'], interactive:true},
+      {emoji:'🐅', name:'Maharajah Jungle Trek', location:'Behind Kali River Rapids, Asia', desc:'Tigers, deer, komodo dragons, water buffalo, and 50+ bird species — usually much quieter than the headline rides nearby.', who:['everyone','kid9']},
+      {emoji:'🐶', name:'Bluey\'s Wild World', location:'Conservation Station, Rafiki\'s Planet Watch', desc:'New as of May 26, 2026 — reached by the Wildlife Express Train from Harambe. A great lower-key stop for the 9-year-old.', who:['kid9']},
+    ],
+    coolSpots:[
+      {emoji:'🦁', name:'Festival of the Lion King', location:'Africa', desc:'A ~30-minute indoor, air-conditioned musical and acrobatic show — high-energy but a real sit-down break.', type:'show'},
+      {emoji:'🐟', name:'Finding Nemo: The Big Blue…and Beyond!', location:'Discovery Island', desc:'A ~25-minute indoor, air-conditioned musical in a large theater — good midday reset.', type:'show'},
+      {emoji:'🦊', name:'Zootopia: Better Zoogether!', location:'Tree of Life Theater, Discovery Island', desc:'Indoor, air-conditioned show that replaced "It\'s Tough to Be a Bug" in late 2025 — same cool theater, new show.', type:'show'},
+      {emoji:'🔬', name:'Conservation Station', location:'Rafiki\'s Planet Watch (via Wildlife Express Train)', desc:'Indoor, air-conditioned building with animal exhibits and windows into the vet area — a calm, cool stop off the main path.', type:'show'},
+      {emoji:'💧', name:'Na\'vi River Journey', location:'Pandora – The World of Avatar', desc:'Slow indoor boat ride, fully air-conditioned — one of the gentlest rides in the park.', type:'ride'},
+      {emoji:'🦅', name:'Avatar Flight of Passage', location:'Pandora – The World of Avatar', desc:'Indoor simulator ride, fully air-conditioned — the park\'s longest standby line, but a genuine cooldown once you\'re moving through the queue building.', type:'ride'},
+    ]
+  },
+];
+
+const TAG_LABEL = { must:'Must Try', kid:'Kid Fave', new:'New 2026', adult:'Adults', classic:'Classic', pesc:'Pescatarian OK' };
+const TAG_CLASS = { must:'tag-must', kid:'tag-kid', new:'tag-new', adult:'tag-adult', classic:'tag-classic', pesc:'tag-pesc' };
+const WHO_LABEL = { kid9:'9YO Pick', teen13:'13YO Pick', adult22:'22YO Pick', parents:'Parents', everyone:'Everyone' };
+const WHO_CLASS = { kid9:'who-kid9', teen13:'who-teen13', adult22:'who-adult22', parents:'who-parents', everyone:'who-everyone' };
+const COOL_TYPE_LABEL = { show:'AC Show', ride:'AC Ride', dining:'AC Dining', shade:'Shade / Fans' };
+const COOL_TYPE_CLASS = { show:'cool-type-show', ride:'cool-type-ride', dining:'cool-type-dining', shade:'cool-type-shade' };
+
+let currentParkId = null;
+let currentFilter = 'all';
+let currentWhoFilter = 'all';
+let currentTab = 'snacks';
+
+function getTried(){
+  try{ return JSON.parse(localStorage.getItem('tripTried') || '{}'); }catch(e){ return {}; }
+}
+function setTried(obj){
+  try{ localStorage.setItem('tripTried', JSON.stringify(obj)); }catch(e){}
+}
+
+/* ---- trip dates, day planner + dashboard ---- */
+const TRIP_DAYS = [];
+for(let d=14; d<=22; d++){
+  const date = new Date(2026, 6, d); // July = month 6
+  TRIP_DAYS.push({
+    key:`2026-07-${d}`,
+    dayNum:d,
+    dow:date.toLocaleDateString('en-US',{weekday:'short'}).toUpperCase(),
+    label:`Jul ${d}`
+  });
+}
+function todayKeyPadded(){
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;
+}
+function getPlan(){
+  try{ return JSON.parse(localStorage.getItem('tripPlan') || '{}'); }catch(e){ return {}; }
+}
+function setPlan(obj){
+  try{ localStorage.setItem('tripPlan', JSON.stringify(obj)); }catch(e){}
+}
+function snackTotals(){
+  const tried = getTried();
+  let total = 0, done = 0;
+  PARKS.forEach(p=>{
+    total += p.snacks.length;
+    p.snacks.forEach((s,i)=>{ if(tried[`${p.id}::${i}`]) done++; });
+  });
+  return {total, done};
+}
+function renderDash(){
+  const el = document.getElementById('dashCard');
+  if(!el) return;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const start = new Date(2026, 6, 14);
+  const end = new Date(2026, 6, 22);
+  const dayMs = 86400000;
+  const {total, done} = snackTotals();
+  const pct = total ? Math.round(done/total*100) : 0;
+  const progressHtml = `
+    <div class="dash-progress">
+      <span>🍿 ${done} of ${total} snacks tried</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  let topHtml = '';
+  if(today < start){
+    const days = Math.round((start - today)/dayMs);
+    topHtml = `<p class="dash-big">🚀 ${days} day${days===1?'':'s'} to go!</p>
+      <p class="dash-sub">Trip starts Tuesday, July 14 — time to plan the days below</p>`;
+  } else if(today <= end){
+    const dayNum = Math.round((today - start)/dayMs) + 1;
+    const plan = getPlan();
+    const parkId = plan[`2026-07-${today.getDate()}`];
+    const park = PARKS.find(p=>p.id===parkId);
+    topHtml = `<p class="dash-big">✨ Day ${dayNum} of 9</p>`;
+    if(park){
+      topHtml += `<button class="dash-today-btn" id="dashTodayBtn">Today: ${park.icon} ${park.name} →</button>`;
+    } else if(parkId === 'rest'){
+      topHtml += `<p class="dash-sub">😴 Rest day — pool, naps, zero rope drops</p>`;
+    } else {
+      topHtml += `<p class="dash-sub">No park picked for today yet — set it in the Day Planner below</p>`;
+    }
+  } else {
+    topHtml = `<p class="dash-big">🏁 Trip complete!</p>
+      <p class="dash-sub">Hope it was magical — the snack scoreboard is final:</p>`;
+  }
+  el.innerHTML = topHtml + progressHtml;
+  const btn = document.getElementById('dashTodayBtn');
+  if(btn){
+    const plan = getPlan();
+    const parkId = plan[`2026-07-${today.getDate()}`];
+    btn.addEventListener('click', ()=> goPark(parkId));
+  }
+}
+function renderPlanner(){
+  const list = document.getElementById('plannerList');
+  if(!list) return;
+  const plan = getPlan();
+  const tKey = todayKeyPadded();
+  list.innerHTML = '';
+  TRIP_DAYS.forEach(day=>{
+    const row = document.createElement('div');
+    row.className = 'day-row' + (`2026-07-${String(day.dayNum).padStart(2,'0')}`===tKey ? ' today' : '');
+    const chosen = plan[day.key] || '';
+    const park = PARKS.find(p=>p.id===chosen);
+    let options = `<option value="">— pick a park —</option><option value="rest"${chosen==='rest'?' selected':''}>😴 Rest / pool day</option>`;
+    PARKS.forEach(p=>{
+      options += `<option value="${p.id}"${chosen===p.id?' selected':''}>${p.icon} ${p.name}</option>`;
+    });
+    row.innerHTML = `
+      <div class="day-main">
+        <div class="day-date"><span class="dow">${day.dow}</span>${day.label}</div>
+        <select class="day-select${chosen?'':' empty'}" aria-label="Park for ${day.label}">${options}</select>
+        ${park ? `<button class="day-go" aria-label="Open ${park.name}">→</button>` : ''}
+      </div>
+      ${park ? `<p class="day-hint">🌅 ${park.bestTimes.tips[0].text}</p>` : ''}`;
+    row.querySelector('.day-select').addEventListener('change', (e)=>{
+      const pl = getPlan();
+      if(e.target.value) pl[day.key] = e.target.value; else delete pl[day.key];
+      setPlan(pl);
+      renderPlanner();
+      renderDash();
+    });
+    const go = row.querySelector('.day-go');
+    if(go) go.addEventListener('click', ()=> goPark(chosen));
+    list.appendChild(row);
+  });
+}
+
+const universalGrid = document.getElementById('universalGrid');
+const disneyGrid = document.getElementById('disneyGrid');
+const homeScreen = document.getElementById('homeScreen');
+const parkScreen = document.getElementById('parkScreen');
+const backBtn = document.getElementById('backBtn');
+const tabbar = document.getElementById('tabbar');
+const themeBtn = document.getElementById('themeBtn');
+const headerTitle = document.getElementById('headerTitle');
+const headerSub = document.getElementById('headerSub');
+const mainFooter = document.getElementById('mainFooter');
+const bannerCoolBtn = document.getElementById('bannerCoolBtn');
+const coolModalOverlay = document.getElementById('coolModalOverlay');
+const coolModal = document.getElementById('coolModal');
+const coolModalTitle = document.getElementById('coolModalTitle');
+const coolModalBody = document.getElementById('coolModalBody');
+const coolModalClose = document.getElementById('coolModalClose');
+
+document.querySelectorAll('.tabbar button').forEach(btn=>{
+  btn.addEventListener('click', ()=> setActiveTab(btn.dataset.tab));
+});
+
+/* theme: dark (default) vs sunlight mode */
+function applyTheme(t){
+  document.body.classList.toggle('light', t==='light');
+  themeBtn.textContent = t==='light' ? '🌙' : '☀️';
+  try{ localStorage.setItem('tripTheme', t); }catch(e){}
+}
+themeBtn.addEventListener('click', ()=>{
+  applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
+});
+
+function openCoolModal(parkId){
+  const park = PARKS.find(p=>p.id===parkId);
+  if(!park) return;
+  coolModalTitle.textContent = `${park.icon} ${park.name}`;
+  coolModalBody.innerHTML = '';
+  const intro = document.createElement('p');
+  intro.className = 'cool-modal-intro';
+  intro.textContent = (park.coolSpots && park.coolSpots.length)
+    ? 'Real Orlando-July heat calls for real breaks. Duck into one of these when the kids (or you) need to cool off. Checked open as of July 2026 — hours can still shift, so a quick glance at the official app that morning is smart.'
+    : 'No dedicated break spots logged for this park yet — lean on shaded queues and frequent water breaks.';
+  coolModalBody.appendChild(intro);
+  (park.coolSpots || []).forEach(s=>{
+    const card = document.createElement('div');
+    card.className = 'cool-spot-card';
+    card.innerHTML = `
+      <div class="cool-spot-top">
+        <div class="cool-spot-emoji">${s.emoji}</div>
+        <div>
+          <p class="cool-spot-name">${s.name}</p>
+          <p class="cool-spot-desc">${s.desc}</p>
+        </div>
+      </div>
+      <div class="cool-spot-meta">
+        ${s.location ? `<span class="loc-pill">📍 ${s.location}</span>` : ''}
+        <span class="cool-type-pill ${COOL_TYPE_CLASS[s.type]}">${COOL_TYPE_LABEL[s.type]}</span>
+      </div>`;
+    coolModalBody.appendChild(card);
+  });
+  if(park.coolClosedNote){
+    const note = document.createElement('div');
+    note.className = 'cool-closed-note';
+    note.textContent = `⚠️ ${park.coolClosedNote}`;
+    coolModalBody.appendChild(note);
+  }
+  coolModalOverlay.classList.add('open');
+  coolModal.classList.add('open');
+}
+function closeCoolModal(){
+  coolModalOverlay.classList.remove('open');
+  coolModal.classList.remove('open');
+}
+coolModalOverlay.addEventListener('click', closeCoolModal);
+coolModalClose.addEventListener('click', closeCoolModal);
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeCoolModal(); });
+bannerCoolBtn.addEventListener('click', ()=>{ if(currentParkId) openCoolModal(currentParkId); });
+
+function renderHome(){
+  universalGrid.innerHTML = '';
+  disneyGrid.innerHTML = '';
+  PARKS.forEach(p=>{
+    const card = document.createElement('div');
+    card.className = `park-card ${p.theme}`;
+    card.setAttribute('role','button');
+    card.setAttribute('tabindex','0');
+    card.innerHTML = `<button class="cool-btn" aria-label="Cool down spots for ${p.name}">❄️</button><div class="icon">${p.icon}</div><div><div class="name">${p.name}</div><div class="count">${p.snacks.length} snacks · ${p.secrets.length} secrets</div></div>`;
+    card.addEventListener('click', (e)=>{
+      if(e.target.closest('.cool-btn')) return;
+      goPark(p.id);
+    });
+    card.addEventListener('keydown', (e)=>{
+      if(e.target.closest('.cool-btn')) return;
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); goPark(p.id); }
+    });
+    card.querySelector('.cool-btn').addEventListener('click', (e)=>{
+      e.stopPropagation();
+      openCoolModal(p.id);
+    });
+    (p.group === 'universal' ? universalGrid : disneyGrid).appendChild(card);
+  });
+}
+
+function showPark(id){
+  currentParkId = id;
+  currentFilter = 'all';
+  currentWhoFilter = 'all';
+  currentTab = 'snacks';
+  const park = PARKS.find(p=>p.id===id);
+  if(!park) return;
+
+  document.getElementById('parkBanner').className = `park-banner ${park.theme}`;
+  document.getElementById('parkBannerIcon').textContent = park.icon;
+  document.getElementById('parkBannerName').textContent = park.name;
+  document.getElementById('parkBannerTag').textContent = park.tagline;
+
+  renderSnacksTab(park);
+  renderStrategyTab(park);
+  renderSecretsTab(park);
+
+  homeScreen.classList.add('hidden');
+  parkScreen.classList.remove('hidden');
+  backBtn.classList.remove('hidden');
+  tabbar.classList.remove('hidden');
+  mainFooter.classList.add('hidden');
+  headerTitle.textContent = `${park.icon} ${park.name}`;
+  headerSub.textContent = park.tagline.toUpperCase();
+  setActiveTab('snacks');
+  loadWaits(id);
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+function showHome(){
+  parkScreen.classList.add('hidden');
+  homeScreen.classList.remove('hidden');
+  backBtn.classList.add('hidden');
+  tabbar.classList.add('hidden');
+  mainFooter.classList.remove('hidden');
+  headerTitle.textContent = '🎉 Orlando Trip Hub';
+  headerSub.textContent = 'JULY 14–22, 2026 · TAP A PARK';
+  renderDash();
+  renderPlanner();
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+/* hash routing — makes the phone's back button work */
+function goPark(id){
+  if(location.hash === `#${id}`) route();
+  else location.hash = id;
+}
+function goHome(){
+  if(!location.hash || location.hash === '#' || location.hash === '#home') route();
+  else location.hash = 'home';
+}
+function route(){
+  const id = location.hash.replace('#','');
+  const park = PARKS.find(p=>p.id===id);
+  if(park) showPark(id);
+  else showHome();
+}
+window.addEventListener('hashchange', route);
+
+function setActiveTab(tab){
+  currentTab = tab;
+  document.querySelectorAll('.tabbar button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p=>{
+    p.classList.toggle('active', p.id === `panel-${tab}`);
+  });
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+backBtn.addEventListener('click', goHome);
+
+function renderSnacksTab(park){
+  const select = document.getElementById('snackFilterSelect');
+  select.innerHTML = '';
+  const allTags = ['all','must','kid','new','adult','classic','pesc'];
+  allTags.forEach(t=>{
+    const opt = document.createElement('option');
+    opt.value = t;
+    opt.textContent = t==='all' ? 'All Snacks' : TAG_LABEL[t];
+    if(t===currentFilter) opt.selected = true;
+    select.appendChild(opt);
+  });
+  select.onchange = ()=>{
+    currentFilter = select.value;
+    renderSnackList(park);
+  };
+  renderSnackList(park);
+
+  document.getElementById('surpriseBtn').onclick = ()=>{
+    const visible = park.snacks.filter(s => currentFilter==='all' || s.tags.includes(currentFilter));
+    if(visible.length===0) return;
+    const pick = visible[Math.floor(Math.random()*visible.length)];
+    const idx = park.snacks.indexOf(pick);
+    const el = document.getElementById(`snack-${park.id}-${idx}`);
+    if(el){
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.classList.add('highlight');
+      setTimeout(()=> el.classList.remove('highlight'), 2200);
+    }
+  };
+}
+
+function renderSnackList(park){
+  const list = document.getElementById('snackList');
+  list.innerHTML = '';
+  const tried = getTried();
+  const visible = park.snacks.filter(s => currentFilter==='all' || s.tags.includes(currentFilter));
+
+  const triedCount = park.snacks.filter((s,i)=> tried[`${park.id}::${i}`]).length;
+  document.getElementById('progressLabel').textContent = `${triedCount} of ${park.snacks.length} tried`;
+  document.getElementById('progressFill').style.width = `${park.snacks.length ? (triedCount/park.snacks.length*100) : 0}%`;
+
+  visible.forEach((s)=>{
+    const idx = park.snacks.indexOf(s);
+    const id = `${park.id}::${idx}`;
+    const isTried = !!tried[id];
+    const card = document.createElement('div');
+    card.className = 'snack-card' + (isTried ? ' tried' : '');
+    card.id = `snack-${park.id}-${idx}`;
+    const tagsHtml = s.tags.map(t=>`<span class="tag-pill ${TAG_CLASS[t]}">${TAG_LABEL[t]}</span>`).join('');
+    card.innerHTML = `
+      <button class="check-btn ${isTried?'checked':''}" aria-label="Mark tried" aria-pressed="${isTried}">✓</button>
+      <div class="snack-top">
+        <div class="snack-emoji">${s.emoji}</div>
+        <div>
+          <p class="snack-name">${s.name}</p>
+          <p class="snack-desc">${s.desc}</p>
+        </div>
+      </div>
+      <div class="snack-meta">
+        <span class="loc-pill">📍 ${s.location}</span>
+        ${tagsHtml}
+      </div>`;
+    card.querySelector('.check-btn').addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const t = getTried();
+      t[id] = !t[id];
+      setTried(t);
+      renderSnackList(park);
+    });
+    list.appendChild(card);
+  });
+}
+
+function renderStrategyTab(park){
+  document.getElementById('timesIntro').textContent = park.bestTimes.intro;
+  const timesList = document.getElementById('timesList');
+  timesList.innerHTML = '';
+  park.bestTimes.tips.forEach(t=>{
+    const card = document.createElement('div');
+    card.className = 'time-card';
+    card.innerHTML = `<div class="temoji">${t.emoji}</div><p>${t.text}</p>`;
+    timesList.appendChild(card);
+  });
+
+  const alertWrap = document.getElementById('closureAlertWrap');
+  alertWrap.innerHTML = park.layout.closure ? `
+    <details class="collapsible closure-details">
+      <summary>🚧 Construction / closure alert (tap to expand)</summary>
+      <div class="collapsible-body"><b>Heads up:</b> ${park.layout.closure}</div>
+    </details>` : '';
+
+  document.getElementById('layoutIntro').textContent = park.layout.intro;
+  const landList = document.getElementById('landList');
+  landList.innerHTML = '';
+  park.layout.lands.forEach(l=>{
+    const card = document.createElement('div');
+    card.className = 'land-card';
+    card.innerHTML = `<p class="lname">${l.name}</p><p class="lblurb">${l.blurb}</p>`;
+    landList.appendChild(card);
+  });
+}
+
+function renderSecretsTab(park){
+  const select = document.getElementById('secretFilterSelect');
+  select.innerHTML = '';
+  const allWho = ['all','interactive','kid9','teen13','adult22','parents','everyone'];
+  allWho.forEach(w=>{
+    const opt = document.createElement('option');
+    opt.value = w;
+    opt.textContent = w==='all' ? 'Everyone in Family' : (w==='interactive' ? '🎮 Interactive Games' : WHO_LABEL[w]);
+    if(w===currentWhoFilter) opt.selected = true;
+    select.appendChild(opt);
+  });
+  select.onchange = ()=>{
+    currentWhoFilter = select.value;
+    renderSecretList(park);
+  };
+  renderSecretList(park);
+}
+
+function renderSecretList(park){
+  const list = document.getElementById('secretList');
+  list.innerHTML = '';
+  const visible = park.secrets.filter(s => {
+    if(currentWhoFilter==='all') return true;
+    if(currentWhoFilter==='interactive') return !!s.interactive;
+    return s.who.includes(currentWhoFilter);
+  });
+  visible.forEach(s=>{
+    const card = document.createElement('div');
+    card.className = 'secret-card';
+    const whoHtml = s.who.map(w=>`<span class="tag-pill ${WHO_CLASS[w]}">${WHO_LABEL[w]}</span>`).join('');
+    const interactiveHtml = s.interactive ? `<span class="tag-pill tag-interactive">🎮 Interactive</span>` : '';
+    card.innerHTML = `
+      <div class="snack-top">
+        <div class="snack-emoji">${s.emoji}</div>
+        <div>
+          <p class="snack-name">${s.name}</p>
+          <p class="snack-desc">${s.desc}</p>
+        </div>
+      </div>
+      <div class="snack-meta">
+        ${s.location ? `<span class="loc-pill">📍 ${s.location}</span>` : ''}
+        ${interactiveHtml}
+        ${whoHtml}
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+/* ---- live wait times (Queue-Times.com free API) ---- */
+const QT_IDS = { mk:6, epcot:5, hs:7, ak:8, ioa:64, usf:65, epic:334 };
+const QT_NOTE = { vb:'Volcano Bay runs on TapuTapu virtual queues — tap in at each slide and your wearable buzzes when it\'s your turn. No standby board to check here.' };
+const qtCache = {};
+
+async function loadWaits(parkId){
+  const box = document.getElementById('liveWaits');
+  if(!box) return;
+  if(QT_NOTE[parkId]){ box.innerHTML = `<p class="waits-note">💡 ${QT_NOTE[parkId]}</p>`; return; }
+  const qid = QT_IDS[parkId];
+  if(!qid){ box.innerHTML = ''; return; }
+  const cached = qtCache[parkId];
+  if(cached && Date.now() - cached.t < 300000){ renderWaits(parkId, cached.data); return; }
+  box.innerHTML = '<p class="waits-note">⏳ Checking live waits…</p>';
+  try{
+    const r = await fetch(`https://queue-times.com/parks/${qid}/queue_times.json`);
+    if(!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    qtCache[parkId] = { t: Date.now(), data };
+    renderWaits(parkId, data);
+  }catch(e){
+    box.innerHTML = '<p class="waits-note" role="button" style="cursor:pointer;">📡 Live waits unavailable right now (offline or API busy) — tap here to retry.</p>';
+    box.querySelector('.waits-note').addEventListener('click', ()=> loadWaits(parkId));
+  }
+}
+function renderWaits(parkId, data){
+  const box = document.getElementById('liveWaits');
+  if(!box || currentParkId !== parkId) return;
+  let rides = (data.rides || []).concat((data.lands || []).flatMap(l => l.rides || []));
+  if(!rides.length){ box.innerHTML = ''; return; }
+  rides.sort((a,b)=> (b.is_open - a.is_open) || (b.wait_time - a.wait_time));
+  const rows = rides.map(r=>{
+    const cls = !r.is_open ? '' : (r.wait_time >= 60 ? 'w-hi' : r.wait_time >= 30 ? 'w-md' : 'w-lo');
+    return `<div class="wait-row${r.is_open ? '' : ' closed'}"><span class="wname">${r.name}</span><span class="wtime ${cls}">${r.is_open ? r.wait_time + ' min' : 'Closed'}</span></div>`;
+  }).join('');
+  box.innerHTML = `
+    <div class="waits-head"><span>⏱️ Live waits right now</span><button class="waits-refresh" aria-label="Refresh wait times">↻</button></div>
+    <div class="waits-list">${rows}</div>
+    <p class="waits-src">Updates every 5 min · Powered by <a href="https://queue-times.com" target="_blank" rel="noopener">Queue-Times.com</a></p>`;
+  box.querySelector('.waits-refresh').addEventListener('click', ()=>{
+    delete qtCache[parkId];
+    loadWaits(parkId);
+  });
+}
+
+// confetti — respects reduced-motion, auto-stops after 30s to save battery
+if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  const confettiEmojis = ['🎈','✨','🎉','🍩','🍦'];
+  const layer = document.getElementById('confettiLayer');
+  for(let i=0;i<12;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.textContent = confettiEmojis[Math.floor(Math.random()*confettiEmojis.length)];
+    el.style.left = `${Math.random()*100}%`;
+    el.style.animationDuration = `${8 + Math.random()*10}s`;
+    el.style.animationDelay = `${Math.random()*10}s`;
+    el.style.fontSize = `${14 + Math.random()*14}px`;
+    layer.appendChild(el);
+  }
+  setTimeout(()=>{ layer.remove(); }, 30000);
+}
+
+/* boot */
+let savedTheme = 'dark';
+try{ savedTheme = localStorage.getItem('tripTheme') || 'dark'; }catch(e){}
+applyTheme(savedTheme);
+renderHome();
+route(); // handles deep links (#epic etc.) and renders dashboard + planner
+
+if('serviceWorker' in navigator && location.protocol === 'https:'){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>

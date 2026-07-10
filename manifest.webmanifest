@@ -1,0 +1,16 @@
+{
+  "name": "Orlando Trip Hub 2026",
+  "short_name": "Trip Hub",
+  "description": "Family guide to Universal & Disney — snacks, strategy, secrets, live waits.",
+  "start_url": "./trip-hub.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a0b3d",
+  "theme_color": "#1a0b3d",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
