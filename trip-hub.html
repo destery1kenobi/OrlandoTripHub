@@ -26,6 +26,7 @@
     --glass-border-soft:rgba(255,255,255,0.14);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{font-size:18.5px;}
   html,body{margin:0;padding:0;height:100%;}
   body{
     font-family:'Fredoka',system-ui,sans-serif;
@@ -127,7 +128,6 @@
   .theme-epic{background:linear-gradient(145deg,rgba(58,28,158,0.55),rgba(123,47,247,0.42) 60%,rgba(0,212,255,0.32));}
   .theme-ioa{background:linear-gradient(145deg,rgba(11,110,79,0.55),rgba(46,196,182,0.42) 60%,rgba(244,163,0,0.32));}
   .theme-usf{background:linear-gradient(145deg,rgba(142,14,0,0.55),rgba(195,20,50,0.42) 60%,rgba(255,183,3,0.32));}
-  .theme-vb{background:linear-gradient(145deg,rgba(255,81,47,0.55),rgba(240,152,25,0.42) 60%,rgba(0,201,167,0.32));}
   .theme-mk{background:linear-gradient(145deg,rgba(30,60,114,0.55),rgba(91,44,145,0.42) 55%,rgba(255,209,102,0.32));}
   .theme-epcot{background:linear-gradient(145deg,rgba(0,78,146,0.55),rgba(0,198,255,0.42) 60%,rgba(125,211,252,0.32));}
   .theme-hs{background:linear-gradient(145deg,rgba(106,1,54,0.55),rgba(201,24,74,0.42) 60%,rgba(255,183,3,0.32));}
@@ -153,7 +153,7 @@
   .select-wrap{position:relative; margin-bottom:14px;}
   .filter-select{
     width:100%; padding:12px 36px 12px 14px; border-radius:14px; border:1px solid var(--glass-border-soft);
-    background:rgba(255,255,255,0.10); color:#fff; font-family:'Fredoka'; font-size:0.85rem; font-weight:600;
+    background:rgba(255,255,255,0.10); color:#fff; font-family:'Fredoka'; font-size:0.95rem; font-weight:600;
     appearance:none; -webkit-appearance:none; -moz-appearance:none; cursor:pointer;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -318,11 +318,11 @@
   }
   .day-row.today{border-color:#ffd166; box-shadow:0 0 0 1px #ffd166;}
   .day-main{display:flex; align-items:center; gap:10px;}
-  .day-date{font-family:'Baloo 2'; font-weight:700; font-size:0.8rem; width:58px; flex-shrink:0; line-height:1.2; color:#fff;}
-  .day-date .dow{display:block; color:#ffd166; font-size:0.6rem; letter-spacing:0.6px; font-family:'Fredoka'; font-weight:600;}
+  .day-date{font-family:'Baloo 2'; font-weight:700; font-size:0.88rem; width:66px; flex-shrink:0; line-height:1.2; color:#fff;}
+  .day-date .dow{display:block; color:#ffd166; font-size:0.72rem; letter-spacing:0.6px; font-family:'Fredoka'; font-weight:600;}
   .day-select{
     flex:1; min-width:0; padding:9px 28px 9px 10px; border-radius:10px; border:1px solid var(--glass-border-soft);
-    background:rgba(255,255,255,0.10); color:#fff; font-family:'Fredoka'; font-size:0.78rem; font-weight:600;
+    background:rgba(255,255,255,0.10); color:#fff; font-family:'Fredoka'; font-size:0.9rem; font-weight:600;
     appearance:none; -webkit-appearance:none; -moz-appearance:none; cursor:pointer;
   }
   .day-select option{background:#241246; color:#fff;}
@@ -400,6 +400,100 @@
   body.light .w-lo{color:#0f766e;} body.light .w-md{color:#b45309;} body.light .w-hi{color:#be185d;}
   body.light footer{color:rgba(34,21,69,0.45);}
 
+  /* skeleton shimmer while waits load */
+  .skel{display:inline-block; height:12px; border-radius:6px;
+    background:linear-gradient(90deg,rgba(255,255,255,0.08),rgba(255,255,255,0.22),rgba(255,255,255,0.08));
+    background-size:200% 100%; animation:shimmer 1.1s linear infinite;}
+  .skel-name{width:58%;} .skel-time{width:44px;}
+  @keyframes shimmer{to{background-position:-200% 0;}}
+  body.light .skel{background:linear-gradient(90deg,rgba(34,21,69,0.06),rgba(34,21,69,0.15),rgba(34,21,69,0.06)); background-size:200% 100%;}
+
+  /* snack check celebration burst */
+  .burst{position:absolute; left:50%; top:14px; font-size:1rem; pointer-events:none; z-index:6;
+    animation:burstfly 0.85s ease-out forwards;}
+  @keyframes burstfly{
+    from{transform:translate(0,0) scale(0.5); opacity:1;}
+    to{transform:translate(var(--dx),var(--dy)) scale(1.25); opacity:0;}
+  }
+
+  /* condensing header on scroll */
+  header.top{transition:padding 0.22s ease;}
+  header.top.condensed{padding:8px 16px 7px;}
+  header.top.condensed h1{font-size:1rem;}
+  header.top.condensed .sub{display:none;}
+
+  /* weather chips */
+  .wx-strip{display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center; margin-top:12px;}
+  .wx-chip{background:rgba(255,255,255,0.12); border:1px solid var(--glass-border-soft); border-radius:999px;
+    padding:6px 12px; font-size:0.76rem; font-weight:600; color:var(--text);}
+  .wx-chip.wx-warn{background:rgba(255,93,143,0.2); border-color:rgba(255,93,143,0.45); color:#ffd6e2;}
+  .wx-lab{font-size:0.62rem; color:var(--muted); width:100%; text-align:center;}
+  .wx-advice{font-size:0.74rem; color:rgba(255,255,255,0.88); margin:10px 0 0; line-height:1.4;}
+  body.light .wx-chip{background:rgba(34,21,69,0.06);}
+  body.light .wx-chip.wx-warn{background:rgba(190,24,93,0.1); border-color:rgba(190,24,93,0.3); color:#9d174d;}
+  .day-wx{font-size:0.64rem; color:var(--muted); margin:6px 2px 0;}
+
+  /* itinerary cards */
+  .it-main{display:flex; align-items:flex-start; gap:10px;}
+  .it-title{font-family:'Baloo 2'; font-weight:700; font-size:0.88rem; color:var(--text); margin:0 0 2px;}
+  .it-ev{font-size:0.74rem; color:var(--muted); margin:3px 0 0; line-height:1.4;}
+  .it-note{font-size:0.7rem; color:#7dd3fc; margin:7px 0 0; line-height:1.35;}
+  body.light .it-note{color:#0369a1;}
+  .park-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:9px;}
+  .park-chip{display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,0.12);
+    border:1px solid var(--glass-border-soft); border-radius:999px; padding:6px 11px;
+    font-size:0.72rem; font-weight:600; color:var(--text); cursor:pointer; font-family:'Fredoka';}
+  .park-chip:active{transform:scale(0.95);}
+  body.light .park-chip{background:rgba(34,21,69,0.06); color:#2a1a5e;}
+
+  /* itinerary day strip */
+  .day-strip{display:flex; gap:6px; overflow-x:auto; padding:2px 2px 10px; margin:0 -2px 4px;
+    -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+  .day-strip::-webkit-scrollbar{display:none;}
+  .day-pill{flex-shrink:0; min-width:50px; text-align:center; background:var(--glass);
+    border:1px solid var(--glass-border-soft); border-radius:12px; padding:7px 10px 6px; cursor:pointer;
+    font-family:'Baloo 2'; font-weight:700; font-size:0.82rem; color:var(--muted);
+    display:flex; flex-direction:column; align-items:center; gap:1px;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);}
+  .day-pill .dp-dow{font-family:'Fredoka'; font-weight:600; font-size:0.54rem; letter-spacing:0.6px;}
+  .day-pill .dp-dot{width:4px; height:4px; border-radius:50%; background:#2ec4b6; margin-top:2px;}
+  .day-pill.sel{background:rgba(255,209,102,0.16); border-color:#ffd166; color:#ffd166;}
+  .day-pill:active{transform:scale(0.94);}
+  body.light .day-pill{background:rgba(34,21,69,0.05);}
+  body.light .day-pill.sel{background:rgba(123,47,247,0.12); border-color:#7b2ff7; color:#6d28d9;}
+
+  /* who-is-this-phone picker */
+  .who-card{background:var(--glass-strong); border:1px solid var(--glass-border); border-radius:18px; padding:14px;
+    margin-bottom:14px; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);}
+  .who-q{margin:0 0 10px; font-size:0.82rem; color:var(--text-soft);}
+  .who-chips{display:flex; flex-wrap:wrap; gap:8px;}
+  .who-chip{background:rgba(255,255,255,0.12); border:1px solid var(--glass-border-soft); color:var(--text);
+    border-radius:999px; padding:8px 13px; font-family:'Fredoka'; font-weight:600; font-size:0.78rem; cursor:pointer;}
+  .who-chip:active{transform:scale(0.95);}
+  .who-set{font-size:0.72rem; color:var(--muted); text-align:center; margin:0 0 12px;}
+  .who-change{background:none; border:none; color:#7dd3fc; font-family:'Fredoka'; font-size:0.72rem; cursor:pointer; text-decoration:underline; padding:0;}
+  body.light .who-chip{background:rgba(34,21,69,0.06); color:#2a1a5e;}
+  body.light .who-change{color:#0369a1;}
+
+  /* today screen */
+  .today-eyebrow{color:#7dd3fc; font-family:'Baloo 2'; font-weight:700; font-size:0.7rem; letter-spacing:1px; margin:2px 4px 10px;}
+  body.light .today-eyebrow{color:#0369a1;}
+  .today-banner{cursor:pointer;}
+  .today-banner .wx-strip{justify-content:flex-start;}
+  .snack-chips{display:flex; flex-wrap:wrap; gap:8px;}
+  .snack-chip{background:var(--glass); border:1px solid var(--glass-border-soft); border-radius:999px;
+    padding:7px 12px; font-size:0.75rem; color:var(--text); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);}
+  #todayScreen{padding-bottom:24px;}
+
+  /* empty states + focus */
+  .empty-note{font-size:0.78rem; color:var(--muted); background:var(--glass); border:1px solid var(--glass-border-soft);
+    border-radius:14px; padding:12px 14px; line-height:1.4;}
+  :focus-visible{outline:2px solid #ffd166; outline-offset:2px; border-radius:4px;}
+  body.light :focus-visible{outline-color:#6d28d9;}
+
+  /* subtle top highlight on glass cards */
+  .park-card, .park-banner, .dash-card, .snack-card, .secret-card{box-shadow:0 8px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.18);}
+
   @media (prefers-reduced-motion: reduce){
     .confetti{display:none;}
     *{transition:none !important; animation:none !important;}
@@ -438,21 +532,18 @@
 
     <div class="dash-card" id="dashCard"></div>
 
+    <div id="whoRow"></div>
+
     <details class="collapsible heads-up-details">
       <summary>📋 Heads up for your dates (tap to expand)</summary>
       <div class="collapsible-body">
-        Crowds at Epic Universe have trended calmer since spring 2026, but they swing hard day to day (the same week can see 1/10 and 9/10 crowd levels back to back) — don't count on it being empty, just check wait times that morning. Still rope-drop the headliners. Volcano Bay Nights hits your window twice: <b>Thursday, July 16 and Friday, July 17</b> (7–11pm, early entry 4pm, $99/person). 600 Block Speakeasy at CityWalk runs through Aug 23. Construction: Frontierland (MK), DinoLand (AK), Lost Continent (IOA), Grand Avenue (HS) — plus <b>Jurassic Park River Adventure (IOA) is closed for refurb until Nov 19</b>.
+        Crowds at Epic Universe have trended calmer since spring 2026, but they swing hard day to day (the same week can see 1/10 and 9/10 crowd levels back to back) — don't count on it being empty, just check wait times that morning. Still rope-drop the headliners. 600 Block Speakeasy at CityWalk runs through Aug 23. Construction: Frontierland (MK), DinoLand (AK), Lost Continent (IOA), Grand Avenue (HS) — plus <b>Jurassic Park River Adventure (IOA) is closed for refurb until Nov 19</b>.
       </div>
     </details>
 
-    <div class="section-label">📅 Day Planner · Jul 14–22</div>
-    <details class="collapsible land-details" id="plannerDetails">
-      <summary>Plan which park on which day (tap to expand)</summary>
-      <div class="collapsible-body">
-        <p class="layout-intro" style="margin-bottom:10px;">Pick a park for each day — it saves automatically on this phone. Tap → to jump to that park's page. Rest days are fine: leave a day blank or mark it Rest Day.</p>
-        <div id="plannerList"></div>
-      </div>
-    </details>
+    <div class="section-label">🗓️ The Itinerary · Jul 14–22</div>
+    <div class="day-strip" id="dayStrip" role="tablist" aria-label="Trip days"></div>
+    <div id="plannerList"></div>
 
     <div class="section-label">🎢 Universal Orlando</div>
     <div class="park-grid" id="universalGrid"></div>
@@ -508,6 +599,9 @@
       <div class="secret-list" id="secretList"></div>
     </div>
   </div>
+
+  <!-- TODAY / GAME-DAY SCREEN -->
+  <div id="todayScreen" class="hidden"></div>
 
 </main>
 
@@ -683,43 +777,6 @@ const PARKS = [
     coolClosedNote:'The Universal Horror Make-Up Show closed May 12, 2026 for a full reimagining and isn\'t expected back until winter 2026 at the earliest (possibly not until 2027) — it will NOT be running during your trip.'
   },
   {
-    id:'vb', group:'universal', theme:'theme-vb', icon:'🏝️', name:'Volcano Bay',
-    tagline:'Water park day = snack strategy day.',
-    snacks:[
-      {emoji:'🌈', name:'Waturi Fusion Ice Cream', location:'Kiosks near River Village', desc:'Banana, blue raspberry, strawberry & orange swirl — built for a hot July day.', tags:['kid','pesc']},
-      {emoji:'🧋', name:'Volcano Boba', location:'Dancing Dragons Bar', desc:'Pineapple juice, coconut water, blue curaçao, mango boba. One for the 22-year-old.', tags:['adult']},
-      {emoji:'🍕', name:'Longboard Pizza, Island BBQ Chicken', location:'Whakawaiwai Eats', desc:'Mango BBQ chicken, red onion, gouda. Good one to split as a family (cheese/veggie options also on the menu).', tags:['classic']},
-      {emoji:'🍫', name:'Chocolate Lava Cake', location:'Kohola Reef Restaurant & Social Club', desc:'Molten center, volcano-themed park, no notes.', tags:['must','pesc']},
-    ],
-    layout:{
-      intro:'Centered on the 200-foot Krakatau volcano, with the whole park walkable end-to-end in under 10 minutes. Krakatau is visible from almost everywhere and doubles as your compass.',
-      closure:'Volcano Bay closes entirely from October 26, 2026 through spring 2027 for its longest-ever refurbishment — doesn\'t affect your July dates, but good to know if you were considering a return trip later this year.',
-      lands:[
-        {name:'Wave Village', blurb:'First area past the entrance — Waturi Beach wave pool at the base of the volcano.'},
-        {name:'River Village', blurb:'The gentle side — lazy river, family raft slides, dedicated little-kid areas.'},
-        {name:'Rainforest Village', blurb:'The thrill zone — Krakatau Aqua Coaster, TeAwa the Fearless River.'},
-        {name:'Krakatau (center)', blurb:'The most intense slides live inside/around the volcano itself — Ko\'okiri Body Plunge, Kala & Tai Nui.'},
-      ]
-    },
-    bestTimes:{
-      intro:'TapuTapu is the whole strategy — wear it, tap it at a slide, and it buzzes when your turn comes up so you never have to physically stand in line.',
-      tips:[
-        {emoji:'🌅', text:'Arrive at rope drop to grab a good beach or cabana spot first, then let TapuTapu virtual-queue the slides while you relax.'},
-        {emoji:'🌙', text:'Volcano Bay Nights lands twice in your window: Thursday, July 16 and Friday, July 17 (7–11pm, early entry 4pm). $99/person after-hours event — lower waits, lighting show, meet-and-greets, DJ.'},
-      ]
-    },
-    secrets:[
-      {emoji:'🌋', name:'Explore inside Krakatau', location:'Center of the park', desc:'You can actually walk inside the volcano through its caverns — there\'s a landing partway through with a great view back out over Waturi Beach.', who:['everyone','kid9']},
-      {emoji:'🌙', name:'Volcano Bay Nights', location:'Thu Jul 16 & Fri Jul 17 · $99/person', desc:'Reduced waits, special lighting, character meet-and-greets, DJ and games — a completely different park vibe after dark. Two dates land inside your trip window, so book whichever night fits your schedule.', who:['everyone','teen13']},
-    ],
-    coolSpots:[
-      {emoji:'☂️', name:'Shaded rest structures', location:'Throughout the park', desc:'Free, no reservation — covered seating areas with fans and island music scattered across the park. Volcano Bay doesn\'t have big indoor AC buildings since it\'s a water park, so these are your best bet.', type:'shade'},
-      {emoji:'🎋', name:'Bambu', location:'Rainforest Village', desc:'A shaded, breezy quick-service hideaway that feels noticeably cooler than the open beach areas.', type:'shade'},
-      {emoji:'🍽️', name:'Kohola Reef Restaurant & Social Club', location:'Wave Village, base of Krakatau', desc:'The park\'s biggest dining spot with the widest menu and the most covered seating if you need a longer sit-down break.', type:'dining'},
-      {emoji:'🛋️', name:'Private cabana rental', location:'Book in advance / at Guest Services', desc:'Shade, loungers, a fridge with water, and food delivery — worth it for a family of 5 on a full-sun July day.', type:'shade'},
-    ]
-  },
-  {
     id:'mk', group:'disney', theme:'theme-mk', icon:'🏰', name:'Magic Kingdom',
     tagline:'The classics, plus new Cool Kid Summer treats.',
     snacks:[
@@ -728,6 +785,7 @@ const PARKS = [
       {emoji:'🥓', name:'Bacon on a Stick', location:'Westward Ho · Frontierland', desc:'Thick-cut, brown-sugar coated. A genuine cult favorite.', tags:['classic']},
       {emoji:'🍍', name:'Dole Whip', location:'Aloha Isle · Adventureland', desc:'The original. Non-negotiable, still the gold standard.', tags:['must','pesc']},
       {emoji:'🎂', name:'Mickey Premium Ice Cream Bar', location:'Carts throughout the park', desc:'Easiest win in the whole resort — always nearby when someone melts down from heat.', tags:['kid','pesc']},
+      {emoji:'🌪️', name:'Sleepy Hollow Funnel Cake', location:'Sleepy Hollow Refreshments · Liberty Square', desc:'Fresh-fried and worth every step to Liberty Square — classic powdered sugar or loaded up. Grab the patio tables for a straight-on castle view while you eat.', tags:['must','classic','pesc']},
     ],
     layout:{
       intro:'Classic hub-and-spoke: six lands radiate out from the central hub in front of Cinderella Castle. About 107 acres total.',
@@ -753,6 +811,7 @@ const PARKS = [
       {emoji:'🌹', name:'Enchanted Tales with Belle', location:'Fantasyland', desc:'An intimate, interactive story experience where guests become part of the "Beauty and the Beast" retelling inside Belle\'s cottage — often overlooked in favor of the coasters.', who:['kid9','everyone']},
       {emoji:'🗺️', name:'A Pirate\'s Adventure: Treasures of the Seven Seas', location:'Cartography Shop near Golden Oak Outpost, Adventureland', desc:'Free treasure-hunt game — tap a MagicBand to get assigned one of 5 missions (~20 min each, pausable, no time limit). Only runs 12pm–6pm daily, so don\'t plan for it at rope drop.', who:['kid9','teen13','everyone'], interactive:true},
       {emoji:'🚻', name:'Quiet restrooms', location:'Between Enchanted Tales with Belle and Pinocchio Village Haus', desc:'Tucked off the main path and rarely busy — good regroup spot when the 9-year-old needs a reset.', who:['parents']},
+      {emoji:'🚌', name:'Double-decker Omnibus ride', location:'Main Street Vehicles · Town Square, Main Street U.S.A.', desc:'The vintage double-decker bus (plus jitney, fire engine and horse trolley) is a real ride you can board free — Town Square to the castle hub. Mornings only, usually done by late morning, and most guests never realize you can hop on. Ride it up top on your way in at rope drop.', who:['everyone','kid9']},
     ],
     coolSpots:[
       {emoji:'🎤', name:'Hall of Presidents', location:'Liberty Square', desc:'23-minute seated, air-conditioned show — one of the longest AC breaks in the park.', type:'show'},
@@ -951,12 +1010,53 @@ function todayKeyPadded(){
   const n = new Date();
   return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;
 }
-function getPlan(){
-  try{ return JSON.parse(localStorage.getItem('tripPlan') || '{}'); }catch(e){ return {}; }
-}
-function setPlan(obj){
-  try{ localStorage.setItem('tripPlan', JSON.stringify(obj)); }catch(e){}
-}
+/* the fixed family itinerary — the single source of truth for every day */
+const ITINERARY = {
+  '2026-07-14': { icon:'🚐', title:'Travel day', parks:[], events:[
+      'Land in Orlando & grab the rental van',
+      'Check into the Marriott',
+      'Tonight: grocery run + Primark Disney haul'
+    ], note:'Primark\'s Disney merch is a fraction of park prices — stock up tonight so nobody begs for $40 tees later.' },
+  '2026-07-15': { icon:'🌌', title:'Epic Universe — open to close', parks:['epic'], events:[
+      'Rope drop: Dark Universe & Isle of Berk first (everyone else sprints to Nintendo)',
+      'Early afternoon: Super Nintendo World once the rush clears',
+      'Stay to close: Celestial Goodnight fireworks over the fountains'
+    ] },
+  '2026-07-16': { icon:'🎢', title:'Universal hop day 1 — IOA + USF', parks:['ioa','usf','epic'], events:[
+      'Rope drop IOA: VelociCoaster or Hagrid\'s first',
+      'Hogwarts Express to Diagon Alley (park-to-park)',
+      'Epic return trip if the crew votes yes'
+    ] },
+  '2026-07-17': { icon:'🎡', title:'Universal hop day 2 — catch-up', parks:['ioa','usf','epic'], events:[
+      'Second swing at whatever got missed or demands a re-ride',
+      'Adults: 600 Block Speakeasy at CityWalk (password required 🤫)'
+    ] },
+  '2026-07-18': { icon:'🏨', title:'Hotel switch day', parks:[], events:[
+      'Check out of the Marriott',
+      'Check into Disney\'s Caribbean Beach Resort',
+      'Pool afternoon — recover for the Disney leg'
+    ], note:'Caribbean Beach is on the Skyliner (direct gondola to EPCOT & Hollywood Studios), and staying on-property unlocks 30-min early entry at every Disney park starting tomorrow.' },
+  '2026-07-19': { icon:'💃', title:'Dance performance + EPCOT', parks:['epcot'], events:[
+      '9:00 AM — dance performance at Disney Springs 💃',
+      '~1:00 PM — EPCOT via Skyliner to International Gateway (drops you at France, steps from Remy\'s)',
+      'World Showcase side first — it\'s right where you enter'
+    ], note:'Arriving at 1pm skips the morning rush; use the DuckTales adventure to keep the kids engaged around World Showcase.' },
+  '2026-07-20': { icon:'🏰', title:'Magic Kingdom — full day', parks:['mk'], events:[
+      'Early entry: TRON first, Seven Dwarfs second',
+      'Storm window = AC circuit (❄️ list on the park page)',
+      'Stay for the fireworks'
+    ] },
+  '2026-07-21': { icon:'🎬', title:'Hollywood Studios — full day', parks:['hs'], events:[
+      'Early entry: Rise of the Resistance, then Slinky Dog',
+      'Skyliner there and back — no car needed',
+      'Last full park day — finish those snack lists 🏆'
+    ] },
+  '2026-07-22': { icon:'👋', title:'Travel home', parks:[], events:[
+      'Check out of Caribbean Beach',
+      'Return the rental van',
+      'Home 🏁'
+    ], note:'Final snack scoreboard is on the dashboard — settle the family championship on the drive.' }
+};
 function snackTotals(){
   const tried = getTried();
   let total = 0, done = 0;
@@ -985,65 +1085,66 @@ function renderDash(){
   if(today < start){
     const days = Math.round((start - today)/dayMs);
     topHtml = `<p class="dash-big">🚀 ${days} day${days===1?'':'s'} to go!</p>
-      <p class="dash-sub">Trip starts Tuesday, July 14 — time to plan the days below</p>`;
+      <p class="dash-sub">Trip starts Tuesday, July 14 — the itinerary below is locked and loaded</p>
+      <button class="dash-today-btn" id="dashTodayBtn">📋 Preview Day 1</button>`;
   } else if(today <= end){
     const dayNum = Math.round((today - start)/dayMs) + 1;
-    const plan = getPlan();
-    const parkId = plan[`2026-07-${today.getDate()}`];
-    const park = PARKS.find(p=>p.id===parkId);
+    const it = ITINERARY[`2026-07-${today.getDate()}`];
     topHtml = `<p class="dash-big">✨ Day ${dayNum} of 9</p>`;
-    if(park){
-      topHtml += `<button class="dash-today-btn" id="dashTodayBtn">Today: ${park.icon} ${park.name} →</button>`;
-    } else if(parkId === 'rest'){
-      topHtml += `<p class="dash-sub">😴 Rest day — pool, naps, zero rope drops</p>`;
-    } else {
-      topHtml += `<p class="dash-sub">No park picked for today yet — set it in the Day Planner below</p>`;
-    }
+    if(it) topHtml += `<p class="dash-sub">${it.icon} ${it.title}</p>`;
+    topHtml += `<button class="dash-today-btn" id="dashTodayBtn">📋 Today's briefing</button>`;
   } else {
     topHtml = `<p class="dash-big">🏁 Trip complete!</p>
       <p class="dash-sub">Hope it was magical — the snack scoreboard is final:</p>`;
   }
-  el.innerHTML = topHtml + progressHtml;
+  el.innerHTML = topHtml + progressHtml + '<div id="wxDash"></div>';
   const btn = document.getElementById('dashTodayBtn');
-  if(btn){
-    const plan = getPlan();
-    const parkId = plan[`2026-07-${today.getDate()}`];
-    btn.addEventListener('click', ()=> goPark(parkId));
-  }
+  if(btn) btn.addEventListener('click', ()=>{ location.hash = 'today'; });
+  loadWeather();
 }
-function renderPlanner(){
+let selectedDayKey = null;
+function renderItinerary(){
+  const strip = document.getElementById('dayStrip');
   const list = document.getElementById('plannerList');
-  if(!list) return;
-  const plan = getPlan();
+  if(!strip || !list) return;
   const tKey = todayKeyPadded();
-  list.innerHTML = '';
+  if(!selectedDayKey){
+    selectedDayKey = TRIP_DAYS.some(d=>d.key===tKey) ? tKey
+      : (tKey < '2026-07-14' ? '2026-07-14' : '2026-07-22');
+  }
+  strip.innerHTML = '';
   TRIP_DAYS.forEach(day=>{
-    const row = document.createElement('div');
-    row.className = 'day-row' + (`2026-07-${String(day.dayNum).padStart(2,'0')}`===tKey ? ' today' : '');
-    const chosen = plan[day.key] || '';
-    const park = PARKS.find(p=>p.id===chosen);
-    let options = `<option value="">— pick a park —</option><option value="rest"${chosen==='rest'?' selected':''}>😴 Rest / pool day</option>`;
-    PARKS.forEach(p=>{
-      options += `<option value="${p.id}"${chosen===p.id?' selected':''}>${p.icon} ${p.name}</option>`;
+    const b = document.createElement('button');
+    b.className = 'day-pill' + (day.key === selectedDayKey ? ' sel' : '');
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-selected', day.key === selectedDayKey);
+    b.setAttribute('aria-label', `${day.dow} July ${day.dayNum}`);
+    b.innerHTML = `<span class="dp-dow">${day.dow}</span>${day.dayNum}${day.key === tKey ? '<span class="dp-dot"></span>' : ''}`;
+    b.addEventListener('click', ()=>{
+      selectedDayKey = day.key;
+      if(navigator.vibrate) navigator.vibrate(5);
+      renderItinerary();
     });
-    row.innerHTML = `
-      <div class="day-main">
-        <div class="day-date"><span class="dow">${day.dow}</span>${day.label}</div>
-        <select class="day-select${chosen?'':' empty'}" aria-label="Park for ${day.label}">${options}</select>
-        ${park ? `<button class="day-go" aria-label="Open ${park.name}">→</button>` : ''}
-      </div>
-      ${park ? `<p class="day-hint">🌅 ${park.bestTimes.tips[0].text}</p>` : ''}`;
-    row.querySelector('.day-select').addEventListener('change', (e)=>{
-      const pl = getPlan();
-      if(e.target.value) pl[day.key] = e.target.value; else delete pl[day.key];
-      setPlan(pl);
-      renderPlanner();
-      renderDash();
-    });
-    const go = row.querySelector('.day-go');
-    if(go) go.addEventListener('click', ()=> goPark(chosen));
-    list.appendChild(row);
+    strip.appendChild(b);
   });
+  list.innerHTML = '';
+  const day = TRIP_DAYS.find(d=>d.key===selectedDayKey);
+  const it = ITINERARY[selectedDayKey];
+  if(!day || !it) return;
+  const w = wxFor(day.key);
+  const row = document.createElement('div');
+  row.className = 'day-row' + (day.key === tKey ? ' today' : '');
+  row.innerHTML = `
+    <p class="it-title">${it.icon} ${it.title}</p>
+    ${it.events.map(e=>`<p class="it-ev">• ${e}</p>`).join('')}
+    ${it.note ? `<p class="it-note">💡 ${it.note}</p>` : ''}
+    ${it.parks.length ? `<div class="park-chips">${it.parks.map(pid=>{
+      const p = PARKS.find(x=>x.id===pid);
+      return p ? `<button class="park-chip" data-park="${pid}">${p.icon} ${p.name}</button>` : '';
+    }).join('')}</div>` : ''}
+    ${w ? `<p class="day-wx">${wxIcon(w.code)} ${w.hi}° high · 💧 ${w.pp}% rain</p>` : ''}`;
+  row.querySelectorAll('.park-chip').forEach(b=> b.addEventListener('click', ()=> goPark(b.dataset.park)));
+  list.appendChild(row);
 }
 
 const universalGrid = document.getElementById('universalGrid');
@@ -1056,6 +1157,7 @@ const themeBtn = document.getElementById('themeBtn');
 const headerTitle = document.getElementById('headerTitle');
 const headerSub = document.getElementById('headerSub');
 const mainFooter = document.getElementById('mainFooter');
+const todayScreen = document.getElementById('todayScreen');
 const bannerCoolBtn = document.getElementById('bannerCoolBtn');
 const coolModalOverlay = document.getElementById('coolModalOverlay');
 const coolModal = document.getElementById('coolModal');
@@ -1153,6 +1255,8 @@ function showPark(id){
   currentFilter = 'all';
   currentWhoFilter = 'all';
   currentTab = 'snacks';
+  const who = getWho();
+  currentWhoFilter = (who && who !== 'all') ? who : 'all';
   const park = PARKS.find(p=>p.id===id);
   if(!park) return;
 
@@ -1166,6 +1270,7 @@ function showPark(id){
   renderSecretsTab(park);
 
   homeScreen.classList.add('hidden');
+  todayScreen.classList.add('hidden');
   parkScreen.classList.remove('hidden');
   backBtn.classList.remove('hidden');
   tabbar.classList.remove('hidden');
@@ -1179,6 +1284,7 @@ function showPark(id){
 
 function showHome(){
   parkScreen.classList.add('hidden');
+  todayScreen.classList.add('hidden');
   homeScreen.classList.remove('hidden');
   backBtn.classList.add('hidden');
   tabbar.classList.add('hidden');
@@ -1186,7 +1292,8 @@ function showHome(){
   headerTitle.textContent = '🎉 Orlando Trip Hub';
   headerSub.textContent = 'JULY 14–22, 2026 · TAP A PARK';
   renderDash();
-  renderPlanner();
+  renderItinerary();
+  renderWhoRow();
   window.scrollTo({top:0, behavior:'instant'});
 }
 
@@ -1200,15 +1307,21 @@ function goHome(){
   else location.hash = 'home';
 }
 function route(){
-  const id = location.hash.replace('#','');
-  const park = PARKS.find(p=>p.id===id);
-  if(park) showPark(id);
-  else showHome();
+  const render = ()=>{
+    const id = location.hash.replace('#','');
+    if(id === 'today'){ showToday(); return; }
+    const park = PARKS.find(p=>p.id===id);
+    if(park) showPark(id);
+    else showHome();
+  };
+  if(document.startViewTransition) document.startViewTransition(render);
+  else render();
 }
 window.addEventListener('hashchange', route);
 
 function setActiveTab(tab){
   currentTab = tab;
+  if(navigator.vibrate) navigator.vibrate(5);
   document.querySelectorAll('.tabbar button').forEach(b=>{
     b.classList.toggle('active', b.dataset.tab === tab);
   });
@@ -1257,9 +1370,7 @@ function renderSnackList(park){
   const tried = getTried();
   const visible = park.snacks.filter(s => currentFilter==='all' || s.tags.includes(currentFilter));
 
-  const triedCount = park.snacks.filter((s,i)=> tried[`${park.id}::${i}`]).length;
-  document.getElementById('progressLabel').textContent = `${triedCount} of ${park.snacks.length} tried`;
-  document.getElementById('progressFill').style.width = `${park.snacks.length ? (triedCount/park.snacks.length*100) : 0}%`;
+  updateSnackProgress(park);
 
   visible.forEach((s)=>{
     const idx = park.snacks.indexOf(s);
@@ -1287,10 +1398,47 @@ function renderSnackList(park){
       const t = getTried();
       t[id] = !t[id];
       setTried(t);
-      renderSnackList(park);
+      const on = !!t[id];
+      card.classList.toggle('tried', on);
+      e.currentTarget.classList.toggle('checked', on);
+      e.currentTarget.setAttribute('aria-pressed', on);
+      updateSnackProgress(park);
+      if(on){
+        if(navigator.vibrate) navigator.vibrate(12);
+        const allDone = park.snacks.every((s2,i2)=> getTried()[`${park.id}::${i2}`]);
+        burst(card, allDone);
+      }
     });
     list.appendChild(card);
   });
+  if(!visible.length){
+    list.innerHTML = '<p class="empty-note">🤷 Nothing matches this filter in this park — try another one.</p>';
+  }
+}
+
+function updateSnackProgress(park){
+  const tried = getTried();
+  const triedCount = park.snacks.filter((s,i)=> tried[`${park.id}::${i}`]).length;
+  const allDone = triedCount === park.snacks.length && park.snacks.length > 0;
+  document.getElementById('progressLabel').textContent = allDone
+    ? `🏆 All ${park.snacks.length} conquered!`
+    : `${triedCount} of ${park.snacks.length} tried`;
+  document.getElementById('progressFill').style.width = `${park.snacks.length ? (triedCount/park.snacks.length*100) : 0}%`;
+}
+
+function burst(el, big){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const em = big ? ['🎉','🏆','✨','🎊'] : ['✨','🎉'];
+  const n = big ? 14 : 7;
+  for(let i=0;i<n;i++){
+    const s = document.createElement('span');
+    s.className = 'burst';
+    s.textContent = em[i % em.length];
+    s.style.setProperty('--dx', `${Math.random()*160-80}px`);
+    s.style.setProperty('--dy', `${-(30+Math.random()*100)}px`);
+    el.appendChild(s);
+    setTimeout(()=> s.remove(), 900);
+  }
 }
 
 function renderStrategyTab(park){
@@ -1368,27 +1516,38 @@ function renderSecretList(park){
       </div>`;
     list.appendChild(card);
   });
+  if(!visible.length){
+    list.innerHTML = '<p class="empty-note">🤷 No secrets under this filter at this park — switch to "Everyone in Family" to see them all.</p>';
+  }
 }
 
 /* ---- live wait times (Queue-Times.com free API) ---- */
 const QT_IDS = { mk:6, epcot:5, hs:7, ak:8, ioa:64, usf:65, epic:334 };
-const QT_NOTE = { vb:'Volcano Bay runs on TapuTapu virtual queues — tap in at each slide and your wearable buzzes when it\'s your turn. No standby board to check here.' };
+const QT_NOTE = {};
 const qtCache = {};
 
+function skelRows(n){
+  return '<div class="waits-list">' + Array(n).fill('<div class="wait-row"><span class="skel skel-name"></span><span class="skel skel-time"></span></div>').join('') + '</div>';
+}
+async function fetchQT(parkId){
+  const qid = QT_IDS[parkId];
+  if(!qid) return null;
+  const cached = qtCache[parkId];
+  if(cached && Date.now() - cached.t < 300000) return cached.data;
+  const r = await fetch(`https://queue-times.com/parks/${qid}/queue_times.json`);
+  if(!r.ok) throw new Error(r.status);
+  const data = await r.json();
+  qtCache[parkId] = { t: Date.now(), data };
+  return data;
+}
 async function loadWaits(parkId){
   const box = document.getElementById('liveWaits');
   if(!box) return;
   if(QT_NOTE[parkId]){ box.innerHTML = `<p class="waits-note">💡 ${QT_NOTE[parkId]}</p>`; return; }
-  const qid = QT_IDS[parkId];
-  if(!qid){ box.innerHTML = ''; return; }
-  const cached = qtCache[parkId];
-  if(cached && Date.now() - cached.t < 300000){ renderWaits(parkId, cached.data); return; }
-  box.innerHTML = '<p class="waits-note">⏳ Checking live waits…</p>';
+  if(!QT_IDS[parkId]){ box.innerHTML = ''; return; }
+  box.innerHTML = skelRows(5);
   try{
-    const r = await fetch(`https://queue-times.com/parks/${qid}/queue_times.json`);
-    if(!r.ok) throw new Error(r.status);
-    const data = await r.json();
-    qtCache[parkId] = { t: Date.now(), data };
+    const data = await fetchQT(parkId);
     renderWaits(parkId, data);
   }catch(e){
     box.innerHTML = '<p class="waits-note" role="button" style="cursor:pointer;">📡 Live waits unavailable right now (offline or API busy) — tap here to retry.</p>';
@@ -1431,6 +1590,232 @@ if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
   }
   setTimeout(()=>{ layer.remove(); }, 30000);
 }
+
+/* ---- Orlando weather (Open-Meteo, free, no key) ---- */
+const WX_URL = 'https://api.open-meteo.com/v1/forecast?latitude=28.45&longitude=-81.50&daily=temperature_2m_max,precipitation_probability_max,weather_code&hourly=precipitation_probability&forecast_days=14&timezone=America%2FNew_York&temperature_unit=fahrenheit';
+let WX = null;
+try{
+  const c = JSON.parse(localStorage.getItem('tripWx') || 'null');
+  if(c && c.data) WX = c.data;
+}catch(e){}
+
+async function loadWeather(){
+  try{
+    const c = JSON.parse(localStorage.getItem('tripWx') || 'null');
+    if(c && Date.now() - c.t < 1800000){ WX = c.data; }
+    else{
+      const r = await fetch(WX_URL);
+      if(!r.ok) throw new Error(r.status);
+      WX = await r.json();
+      try{ localStorage.setItem('tripWx', JSON.stringify({t: Date.now(), data: WX})); }catch(e){}
+    }
+  }catch(e){ /* keep whatever WX we already have */ }
+  paintWx();
+}
+function wxFor(dateKey){
+  if(!WX || !WX.daily || !WX.daily.time) return null;
+  const i = WX.daily.time.indexOf(dateKey);
+  if(i < 0) return null;
+  return {
+    hi: Math.round(WX.daily.temperature_2m_max[i]),
+    pp: WX.daily.precipitation_probability_max[i],
+    code: WX.daily.weather_code[i]
+  };
+}
+function wxIcon(code){
+  if(code == null) return '☀️';
+  if(code <= 1) return '☀️';
+  if(code <= 3) return '⛅';
+  if(code <= 48) return '🌫️';
+  if(code <= 67) return '🌦️';
+  if(code <= 82) return '🌧️';
+  return '⛈️';
+}
+function stormWindow(dateKey){
+  if(!WX || !WX.hourly || !WX.hourly.time) return null;
+  let first = null, last = null;
+  WX.hourly.time.forEach((h,i)=>{
+    if(h.startsWith(dateKey)){
+      const hour = +h.slice(11,13);
+      if(hour >= 10 && hour <= 21 && WX.hourly.precipitation_probability[i] >= 50){
+        if(first === null) first = hour;
+        last = hour;
+      }
+    }
+  });
+  if(first === null) return null;
+  const f = (h)=> h === 12 ? '12pm' : h > 12 ? (h-12)+'pm' : h+'am';
+  return `${f(first)}–${f(last+1)}`;
+}
+function paintWx(){
+  let key = todayKeyPadded(), label = 'Orlando · today';
+  if(key < '2026-07-14'){ key = '2026-07-14'; label = 'Orlando · opening day (Jul 14)'; }
+  const w = wxFor(key);
+  const sw = w ? stormWindow(key) : null;
+  const chips = w
+    ? `<span class="wx-chip">${wxIcon(w.code)} ${w.hi}°F high</span><span class="wx-chip">💧 ${w.pp}% rain</span>${sw ? `<span class="wx-chip wx-warn">⛈️ storms ~${sw}</span>` : ''}<span class="wx-lab">${label}</span>`
+    : '';
+  const dash = document.getElementById('wxDash');
+  if(dash) dash.innerHTML = chips ? `<div class="wx-strip">${chips}</div>` : '';
+  const tw = document.getElementById('todayWx');
+  if(tw) tw.innerHTML = chips
+    ? `<div class="wx-strip">${chips}</div>${sw ? `<p class="wx-advice">The storm window is your AC window — line up indoor rides and shows around ${sw} (❄️ list has them all).</p>` : ''}`
+    : '';
+  renderItinerary();
+}
+
+/* ---- whose phone is this? ---- */
+const WHO_OPTS = [['kid9','🧒 9YO'],['teen13','🧑 13YO'],['adult22','🎓 22YO'],['parents','👨‍👩 Parents'],['all','👪 Shared']];
+function getWho(){ try{ return localStorage.getItem('tripWho') || ''; }catch(e){ return ''; } }
+function renderWhoRow(){
+  const el = document.getElementById('whoRow');
+  if(!el) return;
+  const who = getWho();
+  el.innerHTML = `<div class="select-wrap" style="margin-bottom:14px;">
+    <select class="filter-select" id="whoSelect" aria-label="Whose phone is this? Optional.">
+      <option value=""${who===''?' selected':''}>📱 Whose phone? (optional — spotlights your Secrets)</option>
+      ${WHO_OPTS.map(([v,l])=>`<option value="${v}"${who===v?' selected':''}>${l}${v==='all' ? '' : '’s phone'}</option>`).join('')}
+    </select>
+    <span class="select-arrow">▾</span>
+  </div>`;
+  document.getElementById('whoSelect').addEventListener('change', (e)=>{
+    try{
+      if(e.target.value) localStorage.setItem('tripWho', e.target.value);
+      else localStorage.removeItem('tripWho');
+    }catch(err){}
+    if(navigator.vibrate) navigator.vibrate(8);
+  });
+}
+
+/* ---- Today / game-day screen ---- */
+function showToday(){
+  homeScreen.classList.add('hidden');
+  parkScreen.classList.add('hidden');
+  todayScreen.classList.remove('hidden');
+  backBtn.classList.remove('hidden');
+  tabbar.classList.add('hidden');
+  mainFooter.classList.add('hidden');
+  headerTitle.textContent = '📋 Today';
+  headerSub.textContent = 'YOUR GAME-DAY BRIEFING';
+  renderToday();
+  window.scrollTo({top:0, behavior:'instant'});
+}
+function renderToday(){
+  const now = new Date();
+  const t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const start = new Date(2026, 6, 14), end = new Date(2026, 6, 22);
+  let target = t0, tag = '';
+  if(t0 < start){ target = start; tag = 'PREVIEW · '; }
+  if(t0 > end){ target = end; tag = 'RECAP · '; }
+  const dayNum = Math.round((target - start)/86400000) + 1;
+  const key = `2026-07-${target.getDate()}`;
+  const dlabel = target.toLocaleDateString('en-US', {weekday:'long', month:'short', day:'numeric'});
+  const it = ITINERARY[key] || {icon:'✨', title:'Free day', parks:[], events:[]};
+
+  let html = `<p class="today-eyebrow">${tag}DAY ${dayNum} OF 9 · ${dlabel.toUpperCase()}</p>
+    <div class="dash-card" style="text-align:left;">
+      <p class="dash-big" style="font-size:1.15rem;">${it.icon} ${it.title}</p>
+      ${it.events.map(e=>`<p class="it-ev">• ${e}</p>`).join('')}
+      ${it.note ? `<p class="it-note">💡 ${it.note}</p>` : ''}
+      <div id="todayWx"></div>
+    </div>`;
+
+  const parks = it.parks.map(pid=> PARKS.find(p=>p.id===pid)).filter(Boolean);
+  const tried = getTried();
+
+  if(parks.length === 1){
+    const park = parks[0];
+    const left = park.snacks.filter((s,i)=> !tried[`${park.id}::${i}`]);
+    html += `
+      <div class="park-banner ${park.theme} today-banner" id="todayBanner" role="button" tabindex="0" aria-label="Open ${park.name}">
+        <div class="icon">${park.icon}</div>
+        <h2>${park.name}</h2>
+        <p class="tagline">${park.tagline} · tap for the full page</p>
+      </div>
+      <div class="section-label">⏱️ Longest waits right now</div>
+      <div id="todayWaits"></div>
+      <div class="section-label">🌅 The plan</div>
+      <div class="times-list">${park.bestTimes.tips.slice(0,3).map(t=>`<div class="time-card"><div class="temoji">${t.emoji}</div><p>${t.text}</p></div>`).join('')}</div>
+      <div class="section-label">🍿 Snacks still to conquer (${left.length})</div>
+      ${left.length ? `<div class="snack-chips">${left.map(s=>`<span class="snack-chip">${s.emoji} ${s.name}</span>`).join('')}</div>` : '<p class="waits-note">🏆 Every snack at this park is conquered. Legendary.</p>'}`;
+  } else if(parks.length > 1){
+    html += `
+      <div class="section-label">🎢 Today's parks — tap to open</div>
+      <div class="park-chips" style="margin-bottom:4px;">${parks.map(p=>`<button class="park-chip" data-park="${p.id}">${p.icon} ${p.name}</button>`).join('')}</div>
+      <div class="section-label">⏱️ Longest waits across them</div>
+      <div id="todayWaits"></div>
+      <div class="section-label">🍿 Snacks left today</div>
+      <div class="snack-chips">${parks.map(p=>{
+        const n = p.snacks.filter((s,i)=> !tried[`${p.id}::${i}`]).length;
+        return `<span class="snack-chip">${p.icon} ${p.name}: ${n} left</span>`;
+      }).join('')}</div>`;
+  }
+
+  todayScreen.innerHTML = html;
+  const banner = document.getElementById('todayBanner');
+  if(banner){
+    banner.addEventListener('click', ()=> goPark(parks[0].id));
+    banner.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); goPark(parks[0].id); } });
+  }
+  todayScreen.querySelectorAll('.park-chip').forEach(b=> b.addEventListener('click', ()=> goPark(b.dataset.park)));
+  if(parks.length === 1) loadTodayWaits(parks[0].id);
+  if(parks.length > 1) loadFlexWaits(parks.map(p=>p.id));
+  loadWeather();
+}
+async function loadFlexWaits(pids){
+  const box = document.getElementById('todayWaits');
+  if(!box) return;
+  box.innerHTML = skelRows(5);
+  try{
+    const results = await Promise.allSettled(pids.map(pid=> fetchQT(pid)));
+    const all = [];
+    results.forEach((res,i)=>{
+      if(res.status === 'fulfilled' && res.value){
+        const p = PARKS.find(x=>x.id===pids[i]);
+        (res.value.rides || []).concat((res.value.lands || []).flatMap(l=>l.rides || []))
+          .filter(r=>r.is_open)
+          .forEach(r=> all.push({name:r.name, wait_time:r.wait_time, picon: p ? p.icon : ''}));
+      }
+    });
+    all.sort((a,b)=> b.wait_time - a.wait_time);
+    const top = all.slice(0,8);
+    if(!top.length){ box.innerHTML = '<p class="waits-note">Parks look closed right now — waits appear once gates open.</p>'; return; }
+    box.innerHTML = '<div class="waits-list">' + top.map(r=>{
+      const cls = r.wait_time >= 60 ? 'w-hi' : r.wait_time >= 30 ? 'w-md' : 'w-lo';
+      return `<div class="wait-row"><span class="wname">${r.picon} ${r.name}</span><span class="wtime ${cls}">${r.wait_time} min</span></div>`;
+    }).join('') + '</div><p class="waits-src">Longest standby across today\'s parks · full boards on each park page</p>';
+  }catch(e){
+    box.innerHTML = '<p class="waits-note">📡 Live waits unavailable — check signal.</p>';
+  }
+}
+async function loadTodayWaits(pid){
+  const box = document.getElementById('todayWaits');
+  if(!box) return;
+  if(QT_NOTE[pid]){ box.innerHTML = `<p class="waits-note">💡 ${QT_NOTE[pid]}</p>`; return; }
+  if(!QT_IDS[pid]){ box.innerHTML = ''; return; }
+  box.innerHTML = skelRows(4);
+  try{
+    const data = await fetchQT(pid);
+    let rides = (data.rides || []).concat((data.lands || []).flatMap(l => l.rides || [])).filter(r => r.is_open);
+    rides.sort((a,b)=> b.wait_time - a.wait_time);
+    const top = rides.slice(0, 6);
+    if(!top.length){
+      box.innerHTML = '<p class="waits-note">Park looks closed right now — waits appear once it opens.</p>';
+      return;
+    }
+    box.innerHTML = '<div class="waits-list">' + top.map(r=>{
+      const cls = r.wait_time >= 60 ? 'w-hi' : r.wait_time >= 30 ? 'w-md' : 'w-lo';
+      return `<div class="wait-row"><span class="wname">${r.name}</span><span class="wtime ${cls}">${r.wait_time} min</span></div>`;
+    }).join('') + '</div><p class="waits-src">Longest waits right now · full board on the park page</p>';
+  }catch(e){
+    box.innerHTML = '<p class="waits-note">📡 Live waits unavailable — check signal.</p>';
+  }
+}
+
+/* condensing header on scroll */
+window.addEventListener('scroll', ()=>{
+  document.querySelector('header.top').classList.toggle('condensed', window.scrollY > 30);
+}, {passive:true});
 
 /* boot */
 let savedTheme = 'dark';
