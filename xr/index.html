@@ -30,6 +30,20 @@
   #diag .k{color:rgba(255,255,255,0.66);}
   #diag .ok{color:#00c9a7;} #diag .no{color:#ff5d8f;} #diag .meh{color:#ffd166;}
   #diag .hint{margin-top:10px; padding-top:9px; border-top:1px solid rgba(255,255,255,0.14); color:rgba(255,255,255,0.72); font-size:12px;}
+  #diag .err{
+    margin-top:10px; padding:9px 11px; border-radius:9px;
+    background:rgba(255,93,143,0.14); border:1px solid rgba(255,93,143,0.5);
+    color:#ffc2d4; font-size:11.5px; line-height:1.5;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    white-space:pre-wrap; word-break:break-word; max-height:180px; overflow-y:auto;
+  }
+  #diag .btns{display:flex; flex-wrap:wrap; gap:7px; margin-top:11px;}
+  #diag .btns button{
+    font-family:inherit; font-size:12.5px; padding:8px 12px; border-radius:9px;
+    background:rgba(255,255,255,0.12); color:#fff;
+    border:1px solid rgba(255,255,255,0.26); cursor:pointer;
+  }
+  #diag .btns button:active{transform:scale(0.96);}
   .a-enter-vr-button, .a-enter-ar-button{ transform:scale(1.25); transform-origin:bottom right; }
 </style>
 </head>
@@ -43,10 +57,16 @@
   <div class="row"><span class="k">shared data</span><span id="dData">…</span></div>
   <div class="row"><span class="k">panel day</span><span id="dDay">…</span></div>
   <div class="hint" id="dHint">…</div>
+  <div class="err" id="dErr" hidden></div>
+  <div class="btns">
+    <button type="button" id="btnAR">Enter AR</button>
+    <button type="button" id="btnVR">Enter VR</button>
+    <button type="button" id="btnRaw">Test raw session</button>
+  </div>
 </div>
 
 <a-scene
-  webxr="optionalFeatures: local-floor, bounded-floor, hand-tracking, hit-test, plane-detection, anchors, depth-sensing, layers"
+  webxr="optionalFeatures: local-floor, bounded-floor, hand-tracking, hit-test, plane-detection, anchors"
   xr-mode-ui="XRMode: xr"
   renderer="colorManagement: true; antialias: true; foveationLevel: 1"
   device-orientation-permission-ui="enabled: false"
@@ -96,6 +116,48 @@ AFRAME.registerComponent('passthrough-aware', {
       document.getElementById('diag').style.display = '';
     });
   }
+});
+
+/* ---- surface failures on the page; there is no console in a headset ---- */
+function showErr(msg){
+  const el = document.getElementById('dErr');
+  el.textContent = String(msg);
+  el.hidden = false;
+}
+window.addEventListener('error', (e) => showErr('Error: ' + e.message));
+window.addEventListener('unhandledrejection', (e) => {
+  const r = e.reason;
+  showErr('Rejected: ' + ((r && (r.message || r.name)) || r));
+});
+
+/* Explicit entry buttons. A-Frame's own buttons swallow the rejection reason,
+   which is exactly the detail we need when a session refuses to start. */
+window.addEventListener('DOMContentLoaded', () => {
+  const scene = document.querySelector('a-scene');
+  const go = async (mode) => {
+    document.getElementById('dErr').hidden = true;
+    try {
+      if(mode === 'ar') await scene.enterAR();
+      else await scene.enterVR();
+    } catch(err){
+      showErr(mode.toUpperCase() + ' failed \u2014 ' + (err && (err.name + ': ' + err.message) || err));
+    }
+  };
+  document.getElementById('btnAR').addEventListener('click', () => go('ar'));
+  document.getElementById('btnVR').addEventListener('click', () => go('vr'));
+
+  /* Bypasses A-Frame entirely: if this succeeds but the buttons above fail,
+     the problem is our scene config, not the headset. */
+  document.getElementById('btnRaw').addEventListener('click', async () => {
+    document.getElementById('dErr').hidden = true;
+    try {
+      const s = await navigator.xr.requestSession('immersive-ar', { optionalFeatures: ['local-floor'] });
+      showErr('RAW immersive-ar session STARTED \u2014 ending it now. The headset is fine; the scene config was the problem.');
+      await s.end();
+    } catch(err){
+      showErr('RAW immersive-ar failed \u2014 ' + (err && (err.name + ': ' + err.message) || err));
+    }
+  });
 });
 
 /* ---- diagnostics (laptop-facing) ---- */
