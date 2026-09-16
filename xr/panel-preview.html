@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel Preview — Trip Hub XR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<!-- NOTE: no A-Frame here on purpose. This page renders the panel artwork
+     straight to a 2D canvas so you can iterate on layout and typography in a
+     normal browser tab — no headset, no emulator, instant reload. -->
+<script src="../trip-data.js"></script>
+<script src="panels.js"></script>
+<style>
+  body{margin:0; background:#0a0420; color:#fff; font-family:'Fredoka',system-ui,sans-serif; padding:22px;}
+  h1{font-family:'Baloo 2',sans-serif; font-size:19px; margin:0 0 4px; color:#ffd166;}
+  .sub{color:rgba(255,255,255,0.62); font-size:13px; margin-bottom:18px;}
+  .bar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:18px;}
+  select,button{
+    font-family:inherit; font-size:14px; padding:8px 13px; border-radius:11px;
+    background:rgba(255,255,255,0.11); color:#fff; border:1px solid rgba(255,255,255,0.22); cursor:pointer;
+  }
+  .stage{display:flex; flex-wrap:wrap; gap:26px;}
+  .card{background:rgba(255,255,255,0.045); border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:14px;}
+  .card h2{font-family:'Baloo 2',sans-serif; font-size:14px; margin:0 0 4px; color:#00c9a7;}
+  .card .meta{font-size:11.5px; color:rgba(255,255,255,0.52); margin-bottom:10px;}
+  canvas{display:block; border-radius:10px; background:#0a0420;}
+  /* Panels are drawn at ~1250 px/metre. Shown here at the same angular size
+     you get standing 1.1 m away in the headset, so text that reads here reads there. */
+  .real{outline:1px dashed rgba(255,255,255,0.20); outline-offset:6px;}
+</style>
+</head>
+<body>
+<h1>Panel Preview</h1>
+<div class="sub">Canvas artwork only — the exact pixels that become a texture in the headset. Edit <code>panels.js</code>, reload, repeat.</div>
+
+<div class="bar">
+  <label>Trip day
+    <select id="daySel"></select>
+  </label>
+  <label>Zoom
+    <select id="zoomSel">
+      <option value="0.5">50%</option>
+      <option value="0.75" selected>75%</option>
+      <option value="1">100% (native texture px)</option>
+    </select>
+  </label>
+  <button id="reload">Redraw</button>
+  <button id="wx">Fetch live weather</button>
+  <span id="status" style="font-size:12.5px; color:rgba(255,255,255,0.6);"></span>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<script>
+const PANELS = [
+  { draw:'today', w:0.92, h:0.52, ppm:1250, title:'Today / itinerary', note:'M0 — the day card' }
+];
+
+function render(){
+  const stage = document.getElementById('stage');
+  const zoom = parseFloat(document.getElementById('zoomSel').value);
+  stage.innerHTML = '';
+  PANELS.forEach(p => {
+    const W = Math.round(p.w * p.ppm), H = Math.round(p.h * p.ppm);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = '<h2>' + p.title + '</h2><div class="meta">' + p.note +
+      ' · ' + p.w + '×' + p.h + ' m · ' + W + '×' + H + ' px · ' + p.ppm + ' px/m</div>';
+    const c = document.createElement('canvas');
+    c.className = 'real';
+    c.width = W; c.height = H;
+    c.style.width = (W * zoom) + 'px';
+    c.style.height = (H * zoom) + 'px';
+    card.appendChild(c);
+    stage.appendChild(card);
+    try { PANEL_DRAW[p.draw](c.getContext('2d'), W, H); }
+    catch(e){ console.error(p.draw, e); status('draw failed: ' + e.message); }
+  });
+}
+function status(t){ document.getElementById('status').textContent = t; }
+
+const sel = document.getElementById('daySel');
+Object.keys(ITINERARY).forEach(k => {
+  const o = document.createElement('option');
+  o.value = k; o.textContent = k + '  ' + ITINERARY[k].icon + ' ' + ITINERARY[k].title;
+  if(k === DAY.key) o.selected = true;
+  sel.appendChild(o);
+});
+sel.addEventListener('change', e => { DAY.key = e.target.value; DAY.live = false; render(); });
+document.getElementById('zoomSel').addEventListener('change', render);
+document.getElementById('reload').addEventListener('click', render);
+document.getElementById('wx').addEventListener('click', async () => {
+  status('fetching…');
+  await fetchWeather(); render();
+  status(WX ? 'weather loaded' : 'weather unavailable (offline or blocked)');
+});
+
+(async function(){
+  try {
+    await Promise.all([
+      document.fonts.load('800 54px "Baloo 2"'),
+      document.fonts.load('600 24px "Fredoka"'),
+      document.fonts.load('400 30px "Fredoka"')
+    ]);
+    await document.fonts.ready;
+  } catch(e){}
+  render();
+  status('showing ' + DAY.key + ' — ' + DAY.why);
+  await fetchWeather(); render();
+  if(!WX) status('showing ' + DAY.key + ' \u2014 weather unavailable');
+  else if(!wxFor(DAY.key)) status('showing ' + DAY.key + ' \u2014 no forecast for this date (>14 days out)');
+  else status('showing ' + DAY.key + ' \u2014 live weather');
+})();
+</script>
+</body>
+</html>

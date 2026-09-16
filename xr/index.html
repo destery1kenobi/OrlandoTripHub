@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trip Hub XR — Spatial Dashboard</title>
+
+<!-- same fonts as the phone app, so canvas panels match the PWA -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+<!-- shared data layer: same PARKS / ITINERARY / live waits as trip-hub.html -->
+<script src="../trip-data.js"></script>
+<!-- panel primitives + canvas artwork (testable standalone) -->
+<script src="panels.js"></script>
+
+<style>
+  body{margin:0; background:#0a0420; color:#fff; font-family:'Fredoka',system-ui,sans-serif;}
+  /* desktop/laptop diagnostics — hidden once we're inside an XR session */
+  #diag{
+    position:fixed; left:12px; top:12px; z-index:9999; max-width:330px;
+    background:rgba(16,8,42,0.92); border:1px solid rgba(255,255,255,0.22);
+    border-radius:14px; padding:14px 16px; font-size:13px; line-height:1.55;
+    backdrop-filter:blur(10px);
+  }
+  #diag h2{margin:0 0 8px; font-family:'Baloo 2',sans-serif; font-size:15px; color:#ffd166;}
+  #diag .row{display:flex; justify-content:space-between; gap:12px;}
+  #diag .k{color:rgba(255,255,255,0.66);}
+  #diag .ok{color:#00c9a7;} #diag .no{color:#ff5d8f;} #diag .meh{color:#ffd166;}
+  #diag .hint{margin-top:10px; padding-top:9px; border-top:1px solid rgba(255,255,255,0.14); color:rgba(255,255,255,0.72); font-size:12px;}
+  .a-enter-vr-button, .a-enter-ar-button{ transform:scale(1.25); transform-origin:bottom right; }
+</style>
+</head>
+<body>
+
+<div id="diag">
+  <h2>Trip Hub XR · M0</h2>
+  <div class="row"><span class="k">WebXR API</span><span id="dWebxr">…</span></div>
+  <div class="row"><span class="k">immersive-vr</span><span id="dVr">…</span></div>
+  <div class="row"><span class="k">immersive-ar (passthrough)</span><span id="dAr">…</span></div>
+  <div class="row"><span class="k">shared data</span><span id="dData">…</span></div>
+  <div class="row"><span class="k">panel day</span><span id="dDay">…</span></div>
+  <div class="hint" id="dHint">…</div>
+</div>
+
+<a-scene
+  webxr="optionalFeatures: local-floor, bounded-floor, hand-tracking, hit-test, plane-detection, anchors, depth-sensing, layers"
+  xr-mode-ui="XRMode: xr"
+  renderer="colorManagement: true; antialias: true; foveationLevel: 1"
+  device-orientation-permission-ui="enabled: false"
+  passthrough-aware>
+
+  <!-- VR-only backdrop. Hidden in AR so Quest 3 passthrough shows your real room. -->
+  <a-sky id="backdrop" color="#150a35"></a-sky>
+  <a-entity id="vrFloor"
+            geometry="primitive: plane; width: 12; height: 12"
+            material="color: #1a0b3d; shader: flat; opacity: 0.55"
+            rotation="-90 0 0" position="0 0 0"></a-entity>
+
+  <!-- M0: one panel. M1 adds the curved rail around it. -->
+  <a-entity id="todayPanel"
+            position="0 1.45 -1.1"
+            panel="w: 0.92; h: 0.52; ppm: 1250; draw: today"></a-entity>
+
+  <a-entity id="rig" position="0 0 0">
+    <a-entity camera look-controls wasd-controls position="0 1.6 0"></a-entity>
+    <a-entity laser-controls="hand: left"  raycaster="objects: .clickable; far: 5"></a-entity>
+    <a-entity laser-controls="hand: right" raycaster="objects: .clickable; far: 5"></a-entity>
+    <a-entity hand-tracking-controls="hand: left"></a-entity>
+    <a-entity hand-tracking-controls="hand: right"></a-entity>
+  </a-entity>
+
+  <a-entity light="type: ambient; intensity: 1.0"></a-entity>
+</a-scene>
+
+<script>
+/* ---- passthrough: drop the VR backdrop so the real room shows through ---- */
+AFRAME.registerComponent('passthrough-aware', {
+  init(){
+    const scene = this.el;
+    const show = (on) => {
+      const sky = document.getElementById('backdrop');
+      const flr = document.getElementById('vrFloor');
+      if(sky) sky.setAttribute('visible', on);
+      if(flr) flr.setAttribute('visible', on);
+    };
+    scene.addEventListener('enter-vr', () => {
+      const ar = scene.is('ar-mode');
+      show(!ar);                                    // AR => hide backdrop => passthrough
+      document.getElementById('diag').style.display = 'none';
+    });
+    scene.addEventListener('exit-vr', () => {
+      show(true);
+      document.getElementById('diag').style.display = '';
+    });
+  }
+});
+
+/* ---- diagnostics (laptop-facing) ---- */
+(async function diagnostics(){
+  const set = (id, txt, cls) => {
+    const el = document.getElementById(id);
+    el.textContent = txt; el.className = cls || '';
+  };
+  const hasXR = !!navigator.xr;
+  set('dWebxr', hasXR ? 'available' : 'not available', hasXR ? 'ok' : 'no');
+
+  let ar = false, vr = false;
+  if(hasXR){
+    try { vr = await navigator.xr.isSessionSupported('immersive-vr'); } catch(e){}
+    try { ar = await navigator.xr.isSessionSupported('immersive-ar'); } catch(e){}
+  }
+  set('dVr', vr ? 'supported' : 'no', vr ? 'ok' : 'no');
+  set('dAr', ar ? 'supported' : 'no', ar ? 'ok' : 'no');
+
+  let dataOK = false;
+  try { dataOK = PARKS.length > 0 && Object.keys(ITINERARY).length > 0; } catch(e){}
+  set('dData', dataOK ? PARKS.length + ' parks · ' + Object.keys(ITINERARY).length + ' days' : 'FAILED to load', dataOK ? 'ok' : 'no');
+  set('dDay', DAY.key, DAY.live ? 'ok' : 'meh');
+
+  document.getElementById('dHint').textContent = ar
+    ? 'Tap the AR button (bottom right) for passthrough.'
+    : hasXR
+      ? 'No passthrough here. On a laptop, install Meta’s Immersive Web Emulator extension, or open this URL in Quest Browser.'
+      : 'Desktop preview: drag to look, WASD to move. ' + DAY.why + '.';
+})();
+
+/* ---- boot: fonts -> scene ready -> live data, redrawing as each lands ----
+   Order matters. A-Frame builds panel components asynchronously, so a redraw
+   fired on DOMContentLoaded can land before any component exists and silently
+   do nothing. Wait for the scene, not the document.                          */
+function whenSceneReady(cb){
+  const s = document.querySelector('a-scene');
+  if(!s) return cb();
+  if(s.hasLoaded) cb(); else s.addEventListener('loaded', cb, { once: true });
+}
+(async function boot(){
+  // canvas fillText needs the webfont loaded BEFORE it draws, or it silently
+  // falls back to a system font and the panel looks off.
+  try {
+    await Promise.all([
+      document.fonts.load('800 54px "Baloo 2"'),
+      document.fonts.load('600 24px "Fredoka"'),
+      document.fonts.load('400 30px "Fredoka"')
+    ]);
+    await document.fonts.ready;
+  } catch(e){}
+
+  whenSceneReady(async () => {
+    redrawAll();                                   // fonts are in — repaint sharp
+    try { await fetchWeather(); redrawAll(); } catch(e){}   // then live weather
+  });
+})();
+</script>
+</body>
+</html>

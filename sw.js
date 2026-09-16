@@ -1,9 +1,10 @@
 /* Orlando Trip Hub — offline service worker */
-const CACHE = 'triphub-v1';
+const CACHE = 'triphub-v2';
 const ASSETS = [
   './',
   './index.html',
   './trip-hub.html',
+  './trip-data.js',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png'
@@ -26,6 +27,12 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
+
+  // The XR app is never served from cache. A stale bundle is far more painful
+  // to debug in a headset than no offline support, and the Quest is online for
+  // the demo anyway. (Note: trip-data.js IS cached above — the phone app needs
+  // it offline, and /xr/ pulls it from the same cached copy.)
+  if (url.pathname.includes('/xr/')) return;
 
   // Live wait times: network first, fall back to last cached response
   if (url.hostname.endsWith('queue-times.com')) {
